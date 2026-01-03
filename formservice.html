@@ -1,0 +1,1459 @@
+<!DOCTYPE html>
+<html lang="my">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>စာမေးပွဲ ခုံကျန်စာရင်း</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Pyidaungsu', 'Noto Sans Myanmar', sans-serif;
+        }
+        
+        body {
+            background-color: #f5f7fa;
+            color: #333;
+            line-height: 1.6;
+        }
+        
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 15px;
+        }
+        
+        header {
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+            color: white;
+            padding: 20px 0;
+            text-align: center;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            position: relative;
+        }
+        
+        .admin-btn {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background-color: white;
+            color: #2a5298;
+            border: none;
+            padding: 8px 15px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 0.9rem;
+        }
+        
+        .admin-btn:hover {
+            background-color: #f8f9fa;
+        }
+        
+        header h1 {
+            font-size: 1.8rem;
+            margin-bottom: 8px;
+        }
+        
+        header p {
+            font-size: 1rem;
+            opacity: 0.9;
+        }
+        
+        .date-search-section {
+            background-color: white;
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+        }
+        
+        .section-title {
+            color: #1e3c72;
+            border-bottom: 2px solid #eaeaea;
+            padding-bottom: 8px;
+            margin-bottom: 15px;
+            font-size: 1.3rem;
+        }
+        
+        .date-search-input {
+            display: flex;
+            gap: 8px;
+            max-width: 400px;
+        }
+        
+        .date-search-input input {
+            flex: 1;
+            padding: 10px 12px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 0.9rem;
+        }
+        
+        .search-btn {
+            background-color: #2a5298;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            padding: 0 15px;
+            cursor: pointer;
+            font-weight: 600;
+        }
+        
+        .search-btn:hover {
+            background-color: #1e3c72;
+        }
+        
+        .date-selector {
+            display: flex;
+            gap: 8px;
+            margin-top: 15px;
+            flex-wrap: wrap;
+        }
+        
+        .date-card {
+            background-color: #f8f9fa;
+            border-radius: 6px;
+            padding: 10px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.2s;
+            border: 2px solid transparent;
+            min-width: 65px;
+            flex: 1;
+            position: relative;
+        }
+        
+        .date-card:hover {
+            transform: translateY(-2px);
+        }
+        
+        .date-card.selected {
+            border-color: #2a5298;
+            background-color: #e8f4ff;
+        }
+        
+        .date-day {
+            font-size: 1.3rem;
+            font-weight: bold;
+            color: #2a5298;
+        }
+        
+        .date-month {
+            font-size: 0.8rem;
+            color: #666;
+            margin-bottom: 3px;
+        }
+        
+        .exam-results {
+            margin-top: 20px;
+        }
+        
+        .exam-center-card {
+            background-color: white;
+            border-radius: 8px;
+            padding: 15px;
+            margin-bottom: 15px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+            border-top: 3px solid #2a5298;
+        }
+        
+        .center-title {
+            font-weight: bold;
+            font-size: 1.1rem;
+            color: #1e3c72;
+            margin-bottom: 12px;
+            padding-bottom: 8px;
+            border-bottom: 1px solid #eee;
+        }
+        
+        .time-slots-row {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px;
+            margin-bottom: 8px;
+        }
+        
+        .time-slot {
+            padding: 8px 12px;
+            text-align: center;
+            border-radius: 4px;
+            font-weight: 500;
+            font-size: 0.85rem;
+            min-width: 70px;
+            cursor: pointer;
+            transition: all 0.2s;
+            border: 1px solid transparent;
+        }
+        
+        .time-slot.available {
+            background-color: #e8f7ef;
+            border-color: #b8e6c9;
+            color: #155724;
+        }
+        
+        .time-slot.available:hover {
+            background-color: #d4edda;
+            transform: translateY(-2px);
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        
+        .time-slot.booked {
+            background-color: #ffeaea;
+            border-color: #f5c6cb;
+            color: #721c24;
+            cursor: not-allowed;
+            opacity: 0.7;
+        }
+        
+        .current-date-display {
+            text-align: center;
+            margin-top: 10px;
+            font-weight: 600;
+            color: #2a5298;
+            font-size: 1rem;
+        }
+        
+        .admin-panel {
+            display: none;
+            background-color: white;
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+        }
+        
+        .form-group {
+            margin-bottom: 15px;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 6px;
+            font-weight: 600;
+            color: #444;
+        }
+        
+        select, input, textarea {
+            width: 100%;
+            padding: 10px 12px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 0.9rem;
+        }
+        
+        .btn {
+            display: inline-block;
+            background-color: #2a5298;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: 600;
+            margin-right: 10px;
+            margin-bottom: 10px;
+        }
+        
+        .btn:hover {
+            background-color: #1e3c72;
+        }
+        
+        .btn-secondary {
+            background-color: #6c757d;
+        }
+        
+        .btn-secondary:hover {
+            background-color: #545b62;
+        }
+        
+        .btn-telegram {
+            background-color: #0088cc;
+        }
+        
+        .btn-telegram:hover {
+            background-color: #006699;
+        }
+        
+        .btn-success {
+            background-color: #28a745;
+        }
+        
+        .btn-success:hover {
+            background-color: #218838;
+        }
+        
+        .btn-danger {
+            background-color: #dc3545;
+        }
+        
+        .btn-danger:hover {
+            background-color: #c82333;
+        }
+        
+        .btn-warning {
+            background-color: #ffc107;
+            color: #212529;
+        }
+        
+        .btn-warning:hover {
+            background-color: #e0a800;
+        }
+        
+        .login-form {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.5);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        .login-box {
+            background-color: white;
+            border-radius: 10px;
+            padding: 30px;
+            width: 90%;
+            max-width: 400px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.2);
+        }
+        
+        .close-btn {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: #666;
+        }
+        
+        .close-btn:hover {
+            color: #333;
+        }
+        
+        .booking-form {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.5);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        .booking-box {
+            background-color: white;
+            border-radius: 10px;
+            padding: 30px;
+            width: 90%;
+            max-width: 500px;
+            max-height: 90vh;
+            overflow-y: auto;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.2);
+        }
+        
+        .booking-info {
+            background-color: #f8f9fa;
+            padding: 15px;
+            border-radius: 5px;
+            margin-bottom: 20px;
+        }
+        
+        .booking-info p {
+            margin-bottom: 5px;
+        }
+        
+        .form-row {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+        
+        .form-row .form-group {
+            flex: 1;
+            margin-bottom: 0;
+        }
+        
+        .gender-group {
+            display: flex;
+            gap: 15px;
+            align-items: center;
+        }
+        
+        .gender-option {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+        
+        .no-results {
+            text-align: center;
+            padding: 40px 20px;
+            color: #666;
+        }
+        
+        .telegram-section {
+            margin-top: 20px;
+            padding: 15px;
+            background-color: #f8f9fa;
+            border-radius: 5px;
+            border: 1px solid #ddd;
+        }
+        
+        .message-display {
+            background-color: white;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            padding: 15px;
+            margin: 15px 0;
+            font-family: 'Courier New', monospace;
+            white-space: pre-wrap;
+            word-break: break-all;
+            max-height: 200px;
+            overflow-y: auto;
+            font-size: 0.9rem;
+        }
+        
+        .action-buttons {
+            display: flex;
+            gap: 10px;
+            margin-top: 15px;
+        }
+        
+        .action-buttons .btn {
+            flex: 1;
+        }
+        
+        .prometric-option-group {
+            margin-bottom: 20px;
+            padding: 15px;
+            background-color: #f8f9fa;
+            border-radius: 5px;
+            border: 1px solid #ddd;
+        }
+        
+        .prometric-options {
+            display: flex;
+            gap: 15px;
+            margin-top: 10px;
+        }
+        
+        .prometric-option {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 10px 15px;
+            background-color: white;
+            border: 2px solid #ddd;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: all 0.3s;
+            flex: 1;
+        }
+        
+        .prometric-option:hover {
+            border-color: #2a5298;
+            background-color: #f0f7ff;
+        }
+        
+        .prometric-option.selected {
+            border-color: #2a5298;
+            background-color: #e8f4ff;
+            color: #2a5298;
+        }
+        
+        .prometric-option i {
+            font-size: 1.2rem;
+        }
+        
+        .id-pw-section {
+            display: none;
+            margin-top: 15px;
+            padding: 15px;
+            background-color: #f0f8ff;
+            border-radius: 5px;
+            border: 1px solid #cce7ff;
+        }
+        
+        .gmail-section {
+            display: none;
+            margin-top: 15px;
+            padding: 15px;
+            background-color: #fff8e1;
+            border-radius: 5px;
+            border: 1px solid #ffeaa7;
+        }
+        
+        .admin-actions-row {
+            display: flex;
+            gap: 10px;
+            margin-top: 20px;
+            flex-wrap: wrap;
+        }
+        
+        .admin-actions-row .btn {
+            flex: 1;
+            min-width: 120px;
+        }
+        
+        .date-delete-btn {
+            position: absolute;
+            top: 5px;
+            right: 5px;
+            background-color: rgba(220, 53, 69, 0.8);
+            color: white;
+            border: none;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            font-size: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+        
+        .date-card:hover .date-delete-btn {
+            opacity: 1;
+        }
+        
+        .date-delete-btn:hover {
+            background-color: #dc3545;
+            transform: scale(1.1);
+        }
+        
+        .delete-date-btn {
+            background-color: #dc3545;
+            color: white;
+            border: none;
+            padding: 8px 15px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 0.9rem;
+            margin-left: 10px;
+        }
+        
+        .delete-date-btn:hover {
+            background-color: #c82333;
+        }
+        
+        @media (max-width: 768px) {
+            .container {
+                padding: 10px;
+            }
+            
+            header {
+                padding: 15px 0;
+            }
+            
+            .admin-btn {
+                position: static;
+                margin-top: 10px;
+                display: inline-block;
+            }
+            
+            .date-card {
+                min-width: 55px;
+            }
+            
+            .time-slot {
+                min-width: 60px;
+                padding: 6px 8px;
+            }
+            
+            .form-row {
+                flex-direction: column;
+                gap: 0;
+            }
+            
+            .action-buttons {
+                flex-direction: column;
+            }
+            
+            .prometric-options {
+                flex-direction: column;
+            }
+            
+            .admin-actions-row {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1><i class="fas fa-calendar-alt"></i> စာမေးပွဲ ခုံကျန်စာရင်း</h1>
+            <p>စာမေးပွဲရက်များအလိုက် ခုံကျန်စာရင်းများကို ကြည့်ရှုရန်</p>
+            <button class="admin-btn" id="adminToggleBtn">
+                <i class="fas fa-user-cog"></i> Admin Panel
+            </button>
+        </header>
+        
+        <div class="date-search-section">
+            <h2 class="section-title"><i class="fas fa-search"></i> ရက်စွဲရှာဖွေခြင်း</h2>
+            
+            <div class="date-search-input">
+                <input type="text" id="dateSearch" placeholder="YYYY-MM-DD (ဥပမာ: 2025-12-30)">
+                <button class="search-btn" id="searchBtn"><i class="fas fa-search"></i></button>
+            </div>
+            
+            <div class="current-date-display" id="currentDateDisplay">
+                ဒီဇင်ဘာ ၃၀၊ ၂၀၂၅
+            </div>
+            
+            <div class="date-selector" id="dateSelector"></div>
+            
+            <div class="exam-results" id="examResults"></div>
+        </div>
+        
+        <div class="admin-panel" id="adminPanel">
+            <h2 class="section-title"><i class="fas fa-user-cog"></i> Admin Controls</h2>
+            <div id="adminNotLoggedIn">
+                <p>Admin panel ကို ဝင်ရောက်ရန် လိုအပ်ပါသည်။</p>
+                <button class="btn" id="loginBtn">
+                    <i class="fas fa-sign-in-alt"></i> Login
+                </button>
+            </div>
+            
+            <div id="adminControls" style="display: none;">
+                <div class="admin-controls">
+                    <div class="form-group">
+                        <label for="adminDate">ရက်စွဲ</label>
+                        <input type="text" id="adminDate" placeholder="YYYY-MM-DD" value="2025-12-30">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="adminCenter">စာမေးပွဲစင်တာ</label>
+                        <select id="adminCenter">
+                            <option value="MYJ01">MYJ01/Myanmar Yangon MICT Building</option>
+                            <option value="MYJ02">MYJ02/Myanmar Mandalay</option>
+                            <option value="MYJ03">MYJ03/Myanmar Yangon MICT Building 7</option>
+                            <option value="MYJ04">MYJ04/Myanmar Yangon Sanchoung A</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="adminTime">အချိန်</label>
+                        <select id="adminTime">
+                            <option value="09:15">09:15</option>
+                            <option value="10:00">10:00</option>
+                            <option value="10:45">10:45</option>
+                            <option value="11:30">11:30</option>
+                            <option value="12:15">12:15</option>
+                            <option value="13:00">13:00</option>
+                            <option value="13:45">13:45</option>
+                            <option value="14:30">14:30</option>
+                            <option value="15:15">15:15</option>
+                            <option value="16:00">16:00</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="adminStatus">အခြေအနေ</label>
+                        <select id="adminStatus">
+                            <option value="available">ခုံလွတ်</option>
+                            <option value="booked">ခုံပြည့်</option>
+                        </select>
+                    </div>
+                    
+                    <div class="admin-actions-row">
+                        <button class="btn" id="updateStatusBtn">
+                            <i class="fas fa-save"></i> အခြေအနေပြောင်းမည်
+                        </button>
+                        
+                        <button class="btn" id="addDateBtn">
+                            <i class="fas fa-plus"></i> နေ့သစ်ထည့်မည်
+                        </button>
+                        
+                        <button class="btn btn-warning" id="removeDateBtn">
+                            <i class="fas fa-trash"></i> ရက်စွဲဖျက်မည်
+                        </button>
+                        
+                        <button class="btn btn-danger" id="deleteAllDatesBtn">
+                            <i class="fas fa-trash-alt"></i> အားလုံးဖျက်မည်
+                        </button>
+                    </div>
+                    
+                    <div class="admin-actions-row">
+                        <button class="btn btn-secondary" id="logoutBtn">
+                            <i class="fas fa-sign-out-alt"></i> Logout
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="login-form" id="loginForm">
+        <div class="login-box">
+            <button class="close-btn" id="closeLoginBtn">&times;</button>
+            <h2 class="section-title"><i class="fas fa-user-shield"></i> Admin Login</h2>
+            <div class="form-group">
+                <label for="adminEmail">Email</label>
+                <input type="email" id="adminEmail" placeholder="Email" autocomplete="off">
+            </div>
+            <div class="form-group">
+                <label for="adminPassword">Password</label>
+                <input type="password" id="adminPassword" placeholder="Password" autocomplete="off">
+            </div>
+            <button class="btn" id="submitLoginBtn" style="width: 100%;">
+                <i class="fas fa-sign-in-alt"></i> Login
+            </button>
+        </div>
+    </div>
+    
+    <div class="booking-form" id="bookingForm">
+        <div class="booking-box">
+            <button class="close-btn" id="closeBookingBtn">&times;</button>
+            
+            <h2 class="section-title"><i class="fas fa-calendar-check"></i> စာမေးပွဲခုံ စာရင်းပေးသွင်းရန်</h2>
+            
+            <div class="booking-info" id="bookingInfo"></div>
+            
+            <div class="prometric-option-group">
+                <label>Prometric ID ရှိပါသလား?</label>
+                <div class="prometric-options">
+                    <div class="prometric-option" id="prometricYesOption" onclick="selectPrometricOption('yes')">
+                        <i class="fas fa-check-circle"></i>
+                        <div>
+                            <strong>ရှိပါတယ်</strong>
+                            <div style="font-size: 0.8rem; color: #666;">Prometric ID/PW ဖြည့်ပါ</div>
+                        </div>
+                    </div>
+                    <div class="prometric-option" id="prometricNoOption" onclick="selectPrometricOption('no')">
+                        <i class="fas fa-times-circle"></i>
+                        <div>
+                            <strong>မရှိပါ</strong>
+                            <div style="font-size: 0.8rem; color: #666;">Gmail ဖြည့်ပါ</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="id-pw-section" id="idPwSection">
+                <div class="form-group">
+                    <label for="studentId">Prometric ID <span style="color: red;">*</span></label>
+                    <input type="text" id="studentId" placeholder="Prometric ID">
+                </div>
+                
+                <div class="form-group">
+                    <label for="studentPassword">Password <span style="color: red;">*</span></label>
+                    <input type="password" id="studentPassword" placeholder="Password">
+                </div>
+                
+                <div style="padding: 10px; background-color: #e8f4ff; border-radius: 5px; margin-bottom: 15px; font-size: 0.9rem;">
+                    <i class="fas fa-info-circle"></i> 
+                    <strong>မှတ်ချက်:</strong> Prometric အကောင့်ရှိသူများအတွက်သာ။ ID/PW ကို သေချာစစ်ဆေးပါ။
+                </div>
+            </div>
+            
+            <div class="gmail-section" id="gmailSection">
+                <div class="form-group">
+                    <label for="studentGmail">Gmail Address <span style="color: red;">*</span></label>
+                    <input type="email" id="studentGmail" placeholder="example@gmail.com">
+                </div>
+                
+                <div style="padding: 10px; background-color: #fff8e1; border-radius: 5px; margin-bottom: 15px; font-size: 0.9rem;">
+                    <i class="fas fa-info-circle"></i> 
+                    <strong>မှတ်ချက်:</strong> Prometric အကောင့်မရှိသူများအတွက်ဖြစ်ပြီး နောက်ပိုင်းတွင် Prometric အကောင့်ဖွင့်ရန်လိုအပ်ပါသည်။
+                </div>
+            </div>
+            
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="studentName">အမည် <span style="color: red;">*</span></label>
+                    <input type="text" id="studentName" placeholder="အမည်">
+                </div>
+                <div class="form-group">
+                    <label for="studentBirthday">မွေးနေ့ <span style="color: red;">*</span></label>
+                    <input type="date" id="studentBirthday">
+                </div>
+            </div>
+            
+            <div class="form-group">
+                <label for="studentPhone">ဖုန်းနံပါတ် <span style="color: red;">*</span></label>
+                <input type="tel" id="studentPhone" placeholder="09xxxxxxxxx">
+            </div>
+            
+            <div class="form-group">
+                <label>လိင် <span style="color: red;">*</span></label>
+                <div class="gender-group">
+                    <div class="gender-option">
+                        <input type="radio" id="male" name="gender" value="male">
+                        <label for="male" style="font-weight: normal;">ကျား</label>
+                    </div>
+                    <div class="gender-option">
+                        <input type="radio" id="female" name="gender" value="female">
+                        <label for="female" style="font-weight: normal;">မ</label>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="telegram-section">
+                <h3 style="margin-bottom: 15px; color: #1e3c72;">
+                    <i class="fab fa-telegram"></i> Telegram ဖြင့် စာပို့ရန်
+                </h3>
+                
+                <div class="message-display" id="messageDisplay">
+                    Prometric ID ရွေးချယ်ပြီး အချက်အလက်များ ဖြည့်သွင်းပါ
+                </div>
+                
+                <div class="action-buttons">
+                    <button class="btn btn-telegram" id="generateMessageBtn">
+                        <i class="fas fa-sync"></i> Message ကို Generate လုပ်မည်
+                    </button>
+                    
+                    <button class="btn btn-success" id="copyMessageBtn" disabled>
+                        <i class="fas fa-copy"></i> Message ကို Copy ကူးမည်
+                    </button>
+                </div>
+                
+                <div class="action-buttons">
+                    <button class="btn btn-telegram" id="openTelegramBtn" disabled>
+                        <i class="fab fa-telegram"></i> Telegram ဖွင့်မည်
+                    </button>
+                    
+                    <button class="btn btn-secondary" id="closeFormBtn">
+                        <i class="fas fa-times"></i> ပိတ်မည်
+                    </button>
+                </div>
+                
+                <div style="margin-top: 15px; padding: 10px; background-color: #e8f4ff; border-radius: 5px; font-size: 0.9rem;">
+                    <p><strong>အသုံးပြုနည်း:</strong></p>
+                    <ol style="margin-left: 20px; margin-top: 5px;">
+                        <li>Prometric ID ရှိ/မရှိ ရွေးပါ</li>
+                        <li>အချက်အလက်အားလုံး ဖြည့်ပါ</li>
+                        <li>"Message ကို Generate လုပ်မည်" ခလုတ်ကို နှိပ်ပါ</li>
+                        <li>ပေါ်လာသော message ကို "Copy ကူးမည်" ခလုတ်ဖြင့် copy ကူးပါ</li>
+                        <li>"Telegram ဖွင့်မည်" ခလုတ်ဖြင့် Telegram ဖွင့်ပါ</li>
+                        <li>Telegram ထဲတွင် @shinegyi123 ကို search လုပ်ပါ</li>
+                        <li>Chat ထဲမှာ paste လုပ်ပြီး send လုပ်ပါ</li>
+                    </ol>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const STORAGE_KEY = 'exam_seats_data';
+        const ADMIN_EMAIL = "ooooshine1@gmail.com";
+        const ADMIN_PASSWORD = "159357";
+        
+        const defaultData = {
+            "2025-12-30": {
+                "MYJ01": {
+                    name: "MYJ01/Myanmar Yangon MICT Building",
+                    times: {
+                        "09:15": "available",
+                        "10:00": "available", 
+                        "10:45": "booked",
+                        "11:30": "available",
+                        "12:15": "available",
+                        "13:00": "available",
+                        "13:45": "booked",
+                        "14:30": "available",
+                        "15:15": "available",
+                        "16:00": "booked"
+                    }
+                }
+            }
+        };
+
+        let examData = JSON.parse(localStorage.getItem(STORAGE_KEY)) || defaultData;
+        let currentDate = "2025-12-30";
+        let selectedBooking = null;
+        let isAdminLoggedIn = false;
+        let generatedMessage = '';
+        let hasPrometricAccount = null;
+
+        document.addEventListener('DOMContentLoaded', function() {
+            initApp();
+            
+            document.getElementById('adminToggleBtn').addEventListener('click', toggleAdminPanel);
+            document.getElementById('searchBtn').addEventListener('click', searchDate);
+            document.getElementById('updateStatusBtn').addEventListener('click', updateTimeSlotStatus);
+            document.getElementById('addDateBtn').addEventListener('click', addNewDate);
+            document.getElementById('removeDateBtn').addEventListener('click', removeDate);
+            document.getElementById('deleteAllDatesBtn').addEventListener('click', deleteAllDates);
+            document.getElementById('closeBookingBtn').addEventListener('click', closeBookingForm);
+            document.getElementById('closeFormBtn').addEventListener('click', closeBookingForm);
+            document.getElementById('generateMessageBtn').addEventListener('click', generateTelegramMessage);
+            document.getElementById('copyMessageBtn').addEventListener('click', copyMessageToClipboard);
+            document.getElementById('openTelegramBtn').addEventListener('click', openTelegramApp);
+            document.getElementById('loginBtn').addEventListener('click', openLoginForm);
+            document.getElementById('closeLoginBtn').addEventListener('click', closeLoginForm);
+            document.getElementById('submitLoginBtn').addEventListener('click', submitLogin);
+            document.getElementById('logoutBtn').addEventListener('click', logoutAdmin);
+            
+            checkAdminLogin();
+            window.addEventListener('beforeunload', function() {
+                localStorage.setItem(STORAGE_KEY, JSON.stringify(examData));
+            });
+        });
+
+        function initApp() {
+            createDateCards();
+            displayExamResults(currentDate);
+            updateDateDisplay(currentDate);
+        }
+
+        function createDateCards() {
+            const dateSelector = document.getElementById('dateSelector');
+            dateSelector.innerHTML = '';
+            const dates = Object.keys(examData).sort();
+            
+            if (dates.length === 0) {
+                dateSelector.innerHTML = '<div style="text-align: center; padding: 20px; color: #666;">မည်သည့်ရက်စွဲမျှ မရှိသေးပါ</div>';
+                return;
+            }
+            
+            dates.forEach(dateStr => {
+                const date = new Date(dateStr);
+                const day = date.getDate();
+                const monthNames = ['ဇန်', 'ဖေ', 'မတ်', 'ဧပြ', 'မေ', 'ဇွန်', 'ဇူလ', 'ဩဂု', 'စက်', 'အောက်', 'နိုဝ်', 'ဒီဇ'];
+                const monthName = monthNames[date.getMonth()];
+                
+                const dateCard = document.createElement('div');
+                dateCard.className = 'date-card';
+                if (dateStr === currentDate) dateCard.classList.add('selected');
+                dateCard.innerHTML = `
+                    <div class="date-day">${day}</div>
+                    <div class="date-month">${monthName}</div>
+                    ${isAdminLoggedIn ? '<button class="date-delete-btn" onclick="deleteSingleDate(\'' + dateStr + '\', event)">&times;</button>' : ''}
+                `;
+                
+                dateCard.addEventListener('click', function(e) {
+                    if (!e.target.classList.contains('date-delete-btn')) {
+                        currentDate = dateStr;
+                        document.querySelectorAll('.date-card').forEach(card => card.classList.remove('selected'));
+                        this.classList.add('selected');
+                        document.getElementById('dateSearch').value = dateStr;
+                        displayExamResults(dateStr);
+                        updateDateDisplay(dateStr);
+                    }
+                });
+                
+                dateSelector.appendChild(dateCard);
+            });
+        }
+
+        function displayExamResults(date) {
+            const examResults = document.getElementById('examResults');
+            examResults.innerHTML = '';
+            
+            if (!examData[date]) {
+                examResults.innerHTML = `
+                    <div class="no-results">
+                        <i class="fas fa-calendar-times" style="font-size: 2rem; color: #ccc; margin-bottom: 10px;"></i>
+                        <p>ဤရက်စွဲအတွက် စာမေးပွဲစင်တာများ မရှိပါ။</p>
+                    </div>
+                `;
+                return;
+            }
+            
+            const centers = examData[date];
+            Object.keys(centers).forEach(centerCode => {
+                const center = centers[centerCode];
+                const centerCard = document.createElement('div');
+                centerCard.className = 'exam-center-card';
+                
+                let timeSlotsHTML = '<div class="time-slots-row">';
+                const times = center.times;
+                Object.keys(times).forEach(time => {
+                    const status = times[time];
+                    timeSlotsHTML += `
+                        <div class="time-slot ${status}" 
+                             onclick="handleTimeSlotClick('${date}', '${centerCode}', '${time}', '${status}')">
+                            ${time}
+                        </div>
+                    `;
+                });
+                timeSlotsHTML += '</div>';
+                
+                centerCard.innerHTML = `
+                    <div class="center-title">${center.name}</div>
+                    ${timeSlotsHTML}
+                `;
+                examResults.appendChild(centerCard);
+            });
+        }
+
+        function handleTimeSlotClick(date, centerCode, time, status) {
+            if (status === 'booked') {
+                alert('ဤအချိန်သည် ခုံပြည့်နေပါသည်။');
+                return;
+            }
+            
+            selectedBooking = { date, centerCode, time };
+            const centerName = examData[date][centerCode].name;
+            
+            document.getElementById('bookingInfo').innerHTML = `
+                <p><strong>ရက်စွဲ:</strong> ${formatDateDisplay(date)}</p>
+                <p><strong>စင်တာ:</strong> ${centerName}</p>
+                <p><strong>အချိန်:</strong> ${time}</p>
+            `;
+            
+            resetForm();
+            document.getElementById('bookingForm').style.display = 'flex';
+        }
+
+        function resetForm() {
+            document.getElementById('studentId').value = '';
+            document.getElementById('studentPassword').value = '';
+            document.getElementById('studentGmail').value = '';
+            document.getElementById('studentName').value = '';
+            document.getElementById('studentBirthday').value = '';
+            document.getElementById('studentPhone').value = '';
+            document.querySelectorAll('input[name="gender"]').forEach(radio => radio.checked = false);
+            
+            document.getElementById('messageDisplay').textContent = 'Prometric ID ရွေးချယ်ပြီး အချက်အလက်များ ဖြည့်သွင်းပါ';
+            document.getElementById('generateMessageBtn').disabled = false;
+            document.getElementById('copyMessageBtn').disabled = true;
+            document.getElementById('openTelegramBtn').disabled = true;
+            
+            hasPrometricAccount = null;
+            document.getElementById('prometricYesOption').classList.remove('selected');
+            document.getElementById('prometricNoOption').classList.remove('selected');
+            document.getElementById('idPwSection').style.display = 'none';
+            document.getElementById('gmailSection').style.display = 'none';
+        }
+
+        function selectPrometricOption(option) {
+            hasPrometricAccount = option;
+            
+            document.getElementById('prometricYesOption').classList.remove('selected');
+            document.getElementById('prometricNoOption').classList.remove('selected');
+            
+            if (option === 'yes') {
+                document.getElementById('prometricYesOption').classList.add('selected');
+                document.getElementById('idPwSection').style.display = 'block';
+                document.getElementById('gmailSection').style.display = 'none';
+                document.getElementById('studentId').focus();
+            } else {
+                document.getElementById('prometricNoOption').classList.add('selected');
+                document.getElementById('idPwSection').style.display = 'none';
+                document.getElementById('gmailSection').style.display = 'block';
+                document.getElementById('studentGmail').focus();
+            }
+            
+            document.getElementById('generateMessageBtn').disabled = false;
+        }
+
+        function updateDateDisplay(date) {
+            const dateObj = new Date(date);
+            const day = dateObj.getDate();
+            const year = dateObj.getFullYear();
+            const monthNames = ['ဇန်နဝါရီ', 'ဖေဖော်ဝါရီ', 'မတ်', 'ဧပြီ', 'မေ', 'ဇွန်', 'ဇူလိုင်', 'ဩဂုတ်', 'စက်တင်ဘာ', 'အောက်တိုဘာ', 'နိုဝင်ဘာ', 'ဒီဇင်ဘာ'];
+            const monthName = monthNames[dateObj.getMonth()];
+            document.getElementById('currentDateDisplay').textContent = `${monthName} ${day}၊ ${year}`;
+        }
+
+        function formatDateDisplay(dateStr) {
+            const date = new Date(dateStr);
+            const day = date.getDate();
+            const month = date.getMonth() + 1;
+            const year = date.getFullYear();
+            return `${year}-${month.toString().padStart(2, '0')}-${day.toString().padStart(2, '0')}`;
+        }
+
+        function toggleAdminPanel() {
+            const adminPanel = document.getElementById('adminPanel');
+            adminPanel.style.display = adminPanel.style.display === 'block' ? 'none' : 'block';
+        }
+
+        function searchDate() {
+            const searchInput = document.getElementById('dateSearch').value.trim();
+            if (!searchInput) return;
+            
+            if (!isValidDate(searchInput)) {
+                alert('ကျေးဇူးပြု၍ မှန်ကန်သော ရက်စွဲ format (YYYY-MM-DD) ဖြင့် ထည့်ပါ။');
+                return;
+            }
+            
+            currentDate = searchInput;
+            document.querySelectorAll('.date-card').forEach(card => card.classList.remove('selected'));
+            displayExamResults(searchInput);
+            updateDateDisplay(searchInput);
+            document.getElementById('adminDate').value = searchInput;
+        }
+
+        function updateTimeSlotStatus() {
+            if (!isAdminLoggedIn) {
+                alert('Admin အနေနဲ့ login ဝင်ထားရန် လိုအပ်ပါသည်။');
+                return;
+            }
+            
+            const date = document.getElementById('adminDate').value;
+            const center = document.getElementById('adminCenter').value;
+            const time = document.getElementById('adminTime').value;
+            const status = document.getElementById('adminStatus').value;
+            
+            if (!date || !center || !time || !status) {
+                alert('ကျေးဇူးပြု၍ အကုန်လုံးဖြည့်ပါ။');
+                return;
+            }
+            
+            if (!examData[date]) examData[date] = {};
+            if (!examData[date][center]) {
+                examData[date][center] = {
+                    name: `${center}/စင်တာအသစ်`,
+                    times: {}
+                };
+            }
+            
+            examData[date][center].times[time] = status;
+            if (date === currentDate) displayExamResults(date);
+            localStorage.setItem(STORAGE_KEY, JSON.stringify(examData));
+            
+            createDateCards();
+            alert('အချိန်ဇယား ပြင်ဆင်ပြီးပါပြီ။');
+        }
+
+        function addNewDate() {
+            if (!isAdminLoggedIn) {
+                alert('Admin အနေနဲ့ login ဝင်ထားရန် လိုအပ်ပါသည်။');
+                return;
+            }
+            
+            const newDate = prompt('နေ့သစ်ထည့်ရန် (YYYY-MM-DD):');
+            if (!newDate || !isValidDate(newDate)) {
+                alert('မှန်ကန်သော ရက်စွဲ format ထည့်ပါ (YYYY-MM-DD)');
+                return;
+            }
+            
+            if (examData[newDate]) {
+                alert('ဤရက်စွဲရှိပြီးသားဖြစ်သည်။');
+                return;
+            }
+            
+            examData[newDate] = {};
+            const firstDate = Object.keys(examData)[0];
+            if (firstDate && examData[firstDate]) {
+                Object.keys(examData[firstDate]).forEach(centerCode => {
+                    const center = examData[firstDate][centerCode];
+                    examData[newDate][centerCode] = { name: center.name, times: {} };
+                    Object.keys(center.times).forEach(time => {
+                        examData[newDate][centerCode].times[time] = 'available';
+                    });
+                });
+            }
+            
+            createDateCards();
+            localStorage.setItem(STORAGE_KEY, JSON.stringify(examData));
+            alert('နေ့သစ် ထည့်သွင်းပြီးပါပြီ။');
+        }
+
+        // ========== NEW DATE DELETE FUNCTIONS ==========
+        function removeDate() {
+            if (!isAdminLoggedIn) {
+                alert('Admin အနေနဲ့ login ဝင်ထားရန် လိုအပ်ပါသည်။');
+                return;
+            }
+            
+            const dateToRemove = prompt('ဖျက်လိုသောရက်စွဲ (YYYY-MM-DD):\n\nမှတ်ချက်: ဤရက်စွဲနှင့်အတူ သက်ဆိုင်ရာခုံအားလုံးပါ ဖျက်သွားပါမည်။');
+            if (!dateToRemove) return;
+            
+            if (!examData[dateToRemove]) {
+                alert('ဤရက်စွဲ မရှိပါ။');
+                return;
+            }
+            
+            if (confirm(`သေချာပါသလား? "${dateToRemove}" ရက်စွဲနှင့်အတူ ခုံအားလုံးကို ဖျက်မည်။`)) {
+                delete examData[dateToRemove];
+                localStorage.setItem(STORAGE_KEY, JSON.stringify(examData));
+                
+                if (currentDate === dateToRemove) {
+                    const dates = Object.keys(examData).sort();
+                    if (dates.length > 0) {
+                        currentDate = dates[0];
+                    } else {
+                        currentDate = '';
+                    }
+                }
+                
+                createDateCards();
+                displayExamResults(currentDate);
+                updateDateDisplay(currentDate);
+                alert(`"${dateToRemove}" ရက်စွဲ ဖျက်ပြီးပါပြီ။`);
+            }
+        }
+
+        function deleteAllDates() {
+            if (!isAdminLoggedIn) {
+                alert('Admin အနေနဲ့ login ဝင်ထားရန် လိုအပ်ပါသည်။');
+                return;
+            }
+            
+            const datesCount = Object.keys(examData).length;
+            if (datesCount === 0) {
+                alert('ဖျက်ရန် ရက်စွဲများ မရှိပါ။');
+                return;
+            }
+            
+            if (confirm(`သေချာပါသလား?\n\nရက်စွဲ ${datesCount} ခုအား အားလုံးဖျက်မည်။\nဤလုပ်ဆောင်ချက်ကို ပြန်လည်ရယူ၍မရပါ။`)) {
+                examData = {};
+                localStorage.setItem(STORAGE_KEY, JSON.stringify(examData));
+                
+                currentDate = '';
+                createDateCards();
+                displayExamResults('');
+                updateDateDisplay('');
+                
+                alert('ရက်စွဲအားလုံး ဖျက်ပြီးပါပြီ။');
+            }
+        }
+
+        function deleteSingleDate(dateStr, event) {
+            event.stopPropagation(); // Prevent date selection when clicking delete button
+            
+            if (!isAdminLoggedIn) {
+                alert('Admin အနေနဲ့ login ဝင်ထားရန် လိုအပ်ပါသည်။');
+                return;
+            }
+            
+            if (!examData[dateStr]) {
+                alert('ဤရက်စွဲ မရှိပါ။');
+                return;
+            }
+            
+            if (confirm(`"${dateStr}" ရက်စွဲကို ဖျက်မည်။ သေချာပါသလား?`)) {
+                delete examData[dateStr];
+                localStorage.setItem(STORAGE_KEY, JSON.stringify(examData));
+                
+                if (currentDate === dateStr) {
+                    const dates = Object.keys(examData).sort();
+                    if (dates.length > 0) {
+                        currentDate = dates[0];
+                    } else {
+                        currentDate = '';
+                    }
+                }
+                
+                createDateCards();
+                displayExamResults(currentDate);
+                updateDateDisplay(currentDate);
+                alert(`"${dateStr}" ရက်စွဲ ဖျက်ပြီးပါပြီ။`);
+            }
+        }
+
+        function closeBookingForm() {
+            document.getElementById('bookingForm').style.display = 'none';
+            selectedBooking = null;
+            generatedMessage = '';
+        }
+
+        function generateTelegramMessage() {
+            if (hasPrometricAccount === null) {
+                alert('ကျေးဇူးပြု၍ Prometric ID ရှိမရှိ ရွေးချယ်ပါ။');
+                return;
+            }
+            
+            const name = document.getElementById('studentName').value.trim();
+            const birthday = document.getElementById('studentBirthday').value;
+            const phone = document.getElementById('studentPhone').value.trim();
+            const gender = document.querySelector('input[name="gender"]:checked');
+            
+            if (!name || !birthday || !phone || !gender) {
+                alert('ကျေးဇူးပြု၍ အကုန်လုံး ဖြည့်သွင်းပါ။');
+                return;
+            }
+            
+            if (hasPrometricAccount === 'yes') {
+                const studentId = document.getElementById('studentId').value.trim();
+                const studentPassword = document.getElementById('studentPassword').value.trim();
+                
+                if (!studentId || !studentPassword) {
+                    alert('ကျေးဇူးပြု၍ Prometric ID နှင့် Password ဖြည့်သွင်းပါ။');
+                    return;
+                }
+            } else {
+                const studentGmail = document.getElementById('studentGmail').value.trim();
+                
+                if (!studentGmail || !studentGmail.includes('@')) {
+                    alert('ကျေးဇူးပြု၍ မှန်ကန်သော Gmail address ဖြည့်သွင်းပါ။');
+                    return;
+                }
+            }
+            
+            if (!selectedBooking) {
+                alert('မှားယွင်းမှုတစ်ခု ဖြစ်နေပါသည်။');
+                return;
+            }
+            
+            const { date, centerCode, time } = selectedBooking;
+            const centerName = examData[date][centerCode].name;
+            const formattedDate = formatDateDisplay(date);
+            const genderText = gender.value === 'male' ? 'ကျား' : 'မ';
+            
+            const birthdayDate = new Date(birthday);
+            const formattedBirthday = `${birthdayDate.getFullYear()}-${(birthdayDate.getMonth() + 1).toString().padStart(2, '0')}-${birthdayDate.getDate().toString().padStart(2, '0')}`;
+            
+            let accountInfo = '';
+            if (hasPrometricAccount === 'yes') {
+                const studentId = document.getElementById('studentId').value.trim();
+                const studentPassword = document.getElementById('studentPassword').value.trim();
+                accountInfo = `Prometric ID: ${studentId}\nPrometric Password: ${studentPassword}`;
+            } else {
+                const studentGmail = document.getElementById('studentGmail').value.trim();
+                accountInfo = `Gmail: ${studentGmail}\nPrometric Account: မရှိသေး (နောက်မှဖွင့်ရန်)`;
+            }
+            
+            generatedMessage = `စာမေးပွဲခုံ စာရင်းပေးသွင်းလိုပါသည်။
+
+ရက်စွဲ: ${formattedDate}
+စင်တာ: ${centerName}
+အချိန်: ${time}
+
+ကျောင်းသား/သူ အချက်အလက်များ:
+${accountInfo}
+အမည်: ${name}
+မွေးနေ့: ${formattedBirthday}
+ဖုန်းနံပါတ်: ${phone}
+လိင်: ${genderText}
+
+ကျေးဇူးပြု၍ စစ်ဆေးပေးပါရန်။`;
+            
+            document.getElementById('messageDisplay').textContent = generatedMessage;
+            document.getElementById('copyMessageBtn').disabled = false;
+            document.getElementById('openTelegramBtn').disabled = false;
+            document.getElementById('generateMessageBtn').disabled = true;
+            
+            alert('Message ကို Generate လုပ်ပြီးပါပြီ။ "Message ကို Copy ကူးမည်" ခလုတ်ကို နှိပ်ပါ။');
+        }
+
+        function copyMessageToClipboard() {
+            if (!generatedMessage) {
+                alert('ကျေးဇူးပြု၍ Message ကို အရင်ဖန်တီးပါ။');
+                return;
+            }
+            
+            navigator.clipboard.writeText(generatedMessage).then(function() {
+                alert('✅ Message ကို clipboard သို့ ကူးယူပြီးပါပြီ။\n\nအခု Telegram ဖွင့်ပြီး @shinegyi123 ထံ ပို့ပါ။');
+                document.getElementById('openTelegramBtn').focus();
+            }).catch(function(err) {
+                console.error('Copy failed: ', err);
+                
+                const textArea = document.createElement('textarea');
+                textArea.value = generatedMessage;
+                document.body.appendChild(textArea);
+                textArea.select();
+                
+                try {
+                    const successful = document.execCommand('copy');
+                    if (successful) {
+                        alert('✅ Message ကို clipboard သို့ ကူးယူပြီးပါပြီ။\n\nအခု Telegram ဖွင့်ပြီး @shinegyi123 ထံ ပို့ပါ။');
+                    } else {
+                        alert('❌ Copy ကူးရန် မအောင်မြင်ပါ။ ကျေးဇူးပြု၍ ကိုယ်တိုင် select လုပ်ပြီး copy ကူးပါ။');
+                    }
+                } catch (err) {
+                    alert('❌ Copy ကူးရန် မအောင်မြင်ပါ။ ကျေးဇူးပြု၍ ကိုယ်တိုင် select လုပ်ပြီး copy ကူးပါ။');
+                }
+                
+                document.body.removeChild(textArea);
+            });
+        }
+
+        function openTelegramApp() {
+            if (!generatedMessage) {
+                alert('ကျေးဇူးပြု၍ Message ကို အရင်ဖန်တီးပါ။');
+                return;
+            }
+            
+            const encodedMessage = encodeURIComponent(generatedMessage);
+            const telegramUrl = `https://t.me/share/url?url=&text=${encodedMessage}`;
+            
+            const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+            
+            if (isMobile) {
+                window.location.href = 'tg://resolve?domain=shinegyi123';
+                
+                setTimeout(() => {
+                    window.open(telegramUrl, '_blank');
+                }, 1000);
+            } else {
+                window.open(telegramUrl, '_blank');
+            }
+            
+            alert('Telegram ကို ဖွင့်ပေးလိုက်ပါပြီ။\n\nလုပ်ရမည့်အဆင့်များ:\n1. @shinegyi123 ကို search လုပ်ပါ\n2. Chat ကိုဖွင့်ပါ\n3. Copy ကူးထားသော message ကို paste လုပ်ပါ\n4. Send ခလုတ်ကို နှိပ်ပါ');
+        }
+
+        function openLoginForm() {
+            document.getElementById('loginForm').style.display = 'flex';
+            document.getElementById('adminEmail').value = '';
+            document.getElementById('adminPassword').value = '';
+            document.getElementById('adminEmail').focus();
+        }
+
+        function closeLoginForm() {
+            document.getElementById('loginForm').style.display = 'none';
+        }
+
+        function submitLogin() {
+            const email = document.getElementById('adminEmail').value.trim();
+            const password = document.getElementById('adminPassword').value.trim();
+            
+            if (email === ADMIN_EMAIL && password === ADMIN_PASSWORD) {
+                isAdminLoggedIn = true;
+                updateAdminUI();
+                closeLoginForm();
+                alert('Admin login အောင်မြင်ပါသည်။');
+                createDateCards();
+            } else {
+                alert('Email သို့မဟုတ် Password မှားယွင်းနေပါသည်။');
+            }
+        }
+
+        function logoutAdmin() {
+            isAdminLoggedIn = false;
+            updateAdminUI();
+            alert('Admin logout လုပ်ပြီးပါပြီ။');
+            createDateCards();
+        }
+
+        function checkAdminLogin() {
+            isAdminLoggedIn = false;
+            updateAdminUI();
+        }
+
+        function updateAdminUI() {
+            const adminControls = document.getElementById('adminControls');
+            const adminNotLoggedIn = document.getElementById('adminNotLoggedIn');
+            
+            if (isAdminLoggedIn) {
+                adminControls.style.display = 'block';
+                adminNotLoggedIn.style.display = 'none';
+                document.getElementById('adminDate').value = currentDate;
+            } else {
+                adminControls.style.display = 'none';
+                adminNotLoggedIn.style.display = 'block';
+            }
+            
+            createDateCards();
+        }
+
+        function isValidDate(dateString) {
+            const regex = /^\d{4}-\d{2}-\d{2}$/;
+            if (!regex.test(dateString)) return false;
+            const date = new Date(dateString);
+            return date instanceof Date && !isNaN(date);
+        }
+    </script>
+</body>
+</html>
