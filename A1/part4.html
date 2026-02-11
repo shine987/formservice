@@ -1,0 +1,656 @@
+<!DOCTYPE html>
+<html lang="my">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>A1 Grammar For JFT</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Padauk', 'Myanmar Text', sans-serif;
+        }
+        
+        body {
+            background-color: #f8f9fa;
+            color: #2c3e50;
+            line-height: 1.6;
+            padding: 0;
+        }
+        
+        /* Fixed Top Navigation Bar */
+        .top-nav {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 12px 30px;
+            background-color: #2c3e50;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            z-index: 1000;
+        }
+        
+        .nav-btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            background-color: rgba(255,255,255,0.15);
+            color: white;
+            padding: 10px 25px;
+            font-size: 1rem;
+            text-decoration: none;
+            border-radius: 5px;
+            transition: all 0.3s ease;
+            border: 1px solid rgba(255,255,255,0.2);
+            cursor: pointer;
+            gap: 8px;
+            font-weight: 500;
+        }
+        
+        .nav-btn:hover {
+            background-color: rgba(255,255,255,0.25);
+            border-color: rgba(255,255,255,0.3);
+        }
+        
+        .nav-btn.back {
+            background-color: #7f8c8d;
+            border: none;
+        }
+        
+        .nav-btn.back:hover {
+            background-color: #95a5a6;
+        }
+        
+        .nav-btn.next {
+            background-color: #3498db;
+            border: none;
+        }
+        
+        .nav-btn.next:hover {
+            background-color: #5dade2;
+        }
+        
+        .arrow {
+            font-size: 1.2rem;
+            line-height: 1;
+        }
+        
+        .container {
+            max-width: 1000px;
+            margin: 80px auto 0;
+            padding: 20px;
+        }
+        
+        header {
+            text-align: center;
+            margin-bottom: 30px;
+            padding: 20px;
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+        }
+        
+        h1 {
+            font-size: 2.2rem;
+            margin-bottom: 10px;
+            color: #2c3e50;
+        }
+        
+        .subtitle {
+            font-size: 1.1rem;
+            color: #7f8c8d;
+        }
+        
+        .grammar-list {
+            margin-top: 20px;
+        }
+        
+        .grammar-item {
+            background-color: white;
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+            border-left: 4px solid #3498db;
+            position: relative;
+            padding-left: 50px;
+        }
+        
+        .grammar-number {
+            position: absolute;
+            top: 15px;
+            left: 15px;
+            background-color: #3498db;
+            color: white;
+            width: 30px;
+            height: 30px;
+            border-radius: 5px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 1rem;
+        }
+        
+        .grammar-title {
+            font-size: 1.4rem;
+            color: #2c3e50;
+            margin-bottom: 15px;
+            padding-bottom: 8px;
+            border-bottom: 1px solid #eee;
+        }
+        
+        .grammar-content {
+            padding: 5px 0;
+        }
+        
+        .section-heading {
+            font-weight: bold;
+            color: #2c3e50;
+            margin-top: 15px;
+            margin-bottom: 5px;
+            font-size: 1.1rem;
+        }
+        
+        .section-heading::after {
+            content: ':';
+            margin-right: 5px;
+        }
+        
+        p {
+            margin-bottom: 10px;
+            color: #34495e;
+            text-align: justify;
+        }
+        
+        .meaning {
+            color: #27ae60;
+        }
+        
+        .usage {
+            color: #2980b9;
+        }
+        
+        .examples {
+            color: #e74c3c;
+        }
+        
+        .example-list {
+            padding-left: 20px;
+            margin-top: 5px;
+        }
+        
+        .example-item {
+            margin-bottom: 10px;
+            display: flex;
+            align-items: flex-start;
+        }
+        
+        .example-number {
+            background-color: #f8f9fa;
+            color: #2c3e50;
+            width: 25px;
+            height: 25px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.9rem;
+            margin-right: 10px;
+            flex-shrink: 0;
+            border: 1px solid #ddd;
+        }
+        
+        .example-content {
+            flex-grow: 1;
+        }
+        
+        .japanese {
+            font-weight: bold;
+            color: #2c3e50;
+            display: block;
+        }
+        
+        .burmese {
+            color: #7f8c8d;
+            display: block;
+            font-style: normal;
+        }
+        
+        footer {
+            text-align: center;
+            margin-top: 40px;
+            padding: 20px;
+            color: #7f8c8d;
+            font-size: 0.9rem;
+            border-top: 1px solid #ddd;
+        }
+        
+        @media (max-width: 768px) {
+            .top-nav {
+                padding: 10px 15px;
+            }
+            
+            .nav-btn {
+                padding: 8px 18px;
+                font-size: 0.95rem;
+            }
+            
+            .container {
+                margin-top: 70px;
+                padding: 15px;
+            }
+            
+            h1 {
+                font-size: 1.8rem;
+            }
+            
+            .grammar-item {
+                padding: 15px;
+                padding-left: 45px;
+            }
+            
+            .grammar-number {
+                width: 25px;
+                height: 25px;
+                font-size: 0.9rem;
+            }
+            
+            .example-number {
+                width: 22px;
+                height: 22px;
+                font-size: 0.8rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .top-nav {
+                padding: 8px 12px;
+            }
+            
+            .nav-btn {
+                padding: 8px 12px;
+                font-size: 0.9rem;
+            }
+            
+            .arrow {
+                font-size: 1rem;
+            }
+            
+            .container {
+                margin-top: 65px;
+            }
+            
+            h1 {
+                font-size: 1.5rem;
+            }
+        }
+    </style>
+    <link href="https://fonts.googleapis.com/css2?family=Padauk&display=swap" rel="stylesheet">
+</head>
+<body>
+    <!-- Fixed Top Navigation Bar - Back and Next Buttons -->
+    <div class="top-nav">
+        <a href="grammar.html" class="nav-btn back">
+            <span class="arrow">←</span> Back
+        </a>
+        <a href="https://shine987.github.io/formservice/A1/part2.html" class="nav-btn next">
+            Next Part <span class="arrow">→</span>
+        </a>
+    </div>
+
+    <div class="container">
+        <header>
+            <h1>A1 Grammar for JFT</h1>
+            <p class="subtitle">A1 Level for JFT Exam</p>
+        </header>
+        
+        <div class="grammar-list" id="grammar-list">
+     
+       <div class="grammar-item">
+<div class="grammar-number">31</div>
+<h2 class="grammar-title"> [time အချိန်] に V- ます / [time အချိန်] ごろ V- ます</h2>
+<div class="grammar-content">
+    <div class="section-heading meaning">အဓိပ္ပာယ်</div>
+    <p>「[အချိန်] に V- ます」: "[အချိန်] မှာ V လုပ်ပါတယ်"</p>
+    <p>「[အချိန်] ごろ V- ます」: "[အချိန်] လောက်မှာ V လုပ်ပါတယ်"</p>
+    
+    <div class="section-heading usage">အသုံးပြုပုံ</div>
+    <p>လုပ်ဆောင်ချက်တစ်ခုခုကို ပြုလုပ်တဲ့ အချိန်ကာလကို ဖော်ပြရာမှာ သုံးပါတယ်။ တိကျတဲ့အချိန် (ဥပမာ - ၇ နာရီ) ဆိုရင် <strong>に (ni)</strong> ကို သုံးပြီး၊ ခန့်မှန်းခြေအချိန် (ဥပမာ - ၇ နာရီဝန်းကျင်) ဆိုရင်တော့ <strong>ごろ (goro)</strong> ကို သုံးရပါတယ်။</p>
+    
+    <div class="section-heading vocabulary-notes">Kotoba မှတ်စုများ</div>
+    <ul class="vocabulary-list">
+        <li><strong>に (ni)</strong>: အချိန်ပြ particle (မှာ)</li>
+        <li><strong>ごろ (goro)</strong>: ခန့်မှန်းခြေအချိန်ပြ စကားလုံး (ဝန်းကျင်/လောက်)</li>
+        <li><strong>V- ます</strong>: ကြိယာ (လုပ်ဆောင်သည်)</li>
+    </ul>
+
+    <div class="section-heading examples">ဥပမာစာကြောင်းများ</div>
+    <div class="example-list">
+        <div class="example-item">
+            <div class="example-number">1</div>
+            <div class="example-content">
+                <span class="japanese">７時に起きます‌။</span>
+                <span class="burmese">(၇ နာရီမှာ အိပ်ရာထပါတယ်။)</span>
+            </div>
+        </div>
+        <div class="example-item">
+            <div class="example-number">2</div>
+            <div class="example-content">
+                <span class="japanese">１２時ごろ昼ごはんを食べます‌။</span>
+                <span class="burmese">(၁၂ နာရီလောက်မှာ နေ့လယ်စာ စားပါတယ်။)</span>
+            </div>
+        </div>
+    </div>
+</div>
+</div>
+
+<div class="grammar-item">
+<div class="grammar-number">32</div>
+<h2 class="grammar-title">[time အချိန်] から [time အချိန်] まで</h2>
+<div class="grammar-content">
+    <div class="section-heading meaning">အဓိပ္ပာယ်</div>
+    <p>「[အချိန်] から [အချိန်] まで」: "[အချိန်] မှ [အချိန်] အထိ"</p>
+    
+    <div class="section-heading usage">အသုံးပြုပုံ</div>
+    <p>အလုပ်ချိန်၊ စာသင်ချိန် စတဲ့ အချိန်ကာလတစ်ခုရဲ့ အစနဲ့ အဆုံးကို သတ်မှတ်ဖော်ပြတဲ့အခါ သုံးပါတယ်။ <strong>から (kara)</strong> က "မှ" (အစ) ကို ပြပြီး <strong>まで (made)</strong> က "အထိ" (အဆုံး) ကို ပြပါတယ်။</p>
+    
+    <div class="section-heading vocabulary-notes">Kotoba မှတ်စုများ</div>
+    <ul class="vocabulary-list">
+        <li><strong>から (kara)</strong>: ... မှ (စတင်ခြင်း)</li>
+        <li><strong>まで (made)</strong>: ... အထိ (ပြီးဆုံးခြင်း)</li>
+    </ul>
+
+    <div class="section-heading examples">ဥပမာစာကြောင်းများ</div>
+    <div class="example-list">
+        <div class="example-item">
+            <div class="example-number">1</div>
+            <div class="example-content">
+                <span class="japanese">９時から５時まで働きます‌။</span>
+                <span class="burmese">(၉ နာရီမှ ၅ နာရီအထိ အလုပ်လုပ်ပါတယ်။)</span>
+            </div>
+        </div>
+        <div class="example-item">
+            <div class="example-number">2</div>
+            <div class="example-content">
+                <span class="japanese">昼休みは１２時から１時までです‌။</span>
+                <span class="burmese">(နေ့လယ်နားချိန်က ၁၂ နာရီမှ ၁ နာရီအထိ ဖြစ်ပါတယ်။)</span>
+            </div>
+        </div>
+    </div>
+</div>
+</div>
+
+<div class="grammar-item">
+<div class="grammar-number">33</div>
+<h2 class="grammar-title">あります / います</h2>
+<div class="grammar-content">
+    <div class="section-heading meaning">အဓိပ္ပာယ်</div>
+    <p>「あります / います」: "ရှိသည်"</p>
+    
+    <div class="section-heading usage">အသုံးပြုပုံ</div>
+    <p>အရာဝတ္ထု သို့မဟုတ် သက်ရှိတွေ ရှိနေကြောင်း ဖော်ပြတဲ့ အခြေခံစကားလုံးတွေ ဖြစ်ပါတယ်။ <strong>あります (arimasu)</strong> ကို အပင်၊ ပစ္စည်း၊ ဖြစ်ရပ် စတဲ့ "သက်မဲ့" တွေအတွက် သုံးပြီး၊ <strong>います (imasu)</strong> ကိုတော့ လူနဲ့ တိရစ္ဆာန် စတဲ့ "သက်ရှိ" တွေအတွက် သုံးပါတယ်။</p>
+    
+    <div class="section-heading vocabulary-notes">Kotoba မှတ်စုများ</div>
+    <ul class="vocabulary-list">
+        <li><strong>あります (arimasu)</strong>: ရှိသည် (သက်မဲ့)</li>
+        <li><strong>います (imasu)</strong>: ရှိသည် (သက်ရှိ)</li>
+    </ul>
+
+    <div class="section-heading examples">ဥပမာစာကြောင်းများ</div>
+    <div class="example-list">
+        <div class="example-item">
+            <div class="example-number">1</div>
+            <div class="example-content">
+                <span class="japanese">机の上にパソコンがあります‌။</span>
+                <span class="burmese">(စားပွဲပေါ်မှာ ကွန်ပျူတာ ရှိပါတယ်။)</span>
+            </div>
+        </div>
+        <div class="example-item">
+            <div class="example-number">2</div>
+            <div class="example-content">
+                <span class="japanese">あそこに犬がいます‌။</span>
+                <span class="burmese">(ဟိုမှာ ခွေးတစ်ကောင် ရှိပါတယ်။)</span>
+            </div>
+        </div>
+    </div>
+</div>
+</div>
+
+<div class="grammar-item">
+<div class="grammar-number">34</div>
+<h2 class="grammar-title">V- ましょう</h2>
+<div class="grammar-content">
+    <div class="section-heading meaning">အဓိပ္ပာယ်</div>
+    <p>「V- ましょう」: "... ကြရအောင်"</p>
+    
+    <div class="section-heading usage">အသုံးပြုပုံ</div>
+    <p>တစ်ဖက်လူကို တစ်ခုခုအတူတူလုပ်ဖို့ ဖိတ်ခေါ်တဲ့အခါ ဒါမှမဟုတ် အကြံပြုတဲ့အခါ သုံးပါတယ်။ ကြိယာ (Verb) ရဲ့ <strong>ます (masu)</strong> နေရာမှာ <strong>ましょう (mashou)</strong> ကို အစားထိုးပြီး သုံးရပါတယ်။</p>
+    
+    <div class="section-heading examples">ဥပမာစာကြောင်းများ</div>
+    <div class="example-list">
+        <div class="example-item">
+            <div class="example-number">1</div>
+            <div class="example-content">
+                <span class="japanese">ちょっと休みましょう‌။</span>
+                <span class="burmese">(ခဏလောက် နားကြရအောင်။)</span>
+            </div>
+        </div>
+        <div class="example-item">
+            <div class="example-number">2</div>
+            <div class="example-content">
+                <span class="japanese">ごはんを食べましょう‌။</span>
+                <span class="burmese">(ထမင်းစားကြရအောင်။)</span>
+            </div>
+        </div>
+        <div class="example-item">
+            <div class="example-number">3</div>
+            <div class="example-content">
+                <span class="japanese">明日も会いましょう‌။</span>
+                <span class="burmese">(မနက်ဖြန်လည်း တွေ့ကြရအောင်။)</span>
+            </div>
+        </div>
+    </div>
+</div>
+</div>
+
+<div class="grammar-item">
+<div class="grammar-number">35</div>
+<h2 class="grammar-title">[time အချိန်] に V- ます (Frequency)</h2>
+<div class="grammar-content">
+    <div class="section-heading meaning">အဓိပ္ပာယ်</div>
+    <p>「[အချိန်ကာလ] に [အရေအတွက်] V- ます」: "[အချိန်ကာလ] မှာ [အရေအတွက်] ခန့် V လုပ်ပါတယ်။"</p>
+    
+    <div class="section-heading usage">အသုံးပြုပုံ</div>
+    <p>သတ်မှတ်ထားတဲ့ အချိန်ကာလအပိုင်းအခြားတစ်ခုအတွင်းမှာ အလုပ်တစ်ခုကို ဘယ်နှစ်ကြိမ်လုပ်သလဲဆိုတဲ့ အကြိမ်ရေ (Frequency) ကို ဖော်ပြချင်တဲ့အခါ သုံးပါတယ်။</p>
+    
+    <div class="section-heading examples">ဥပမာစာကြောင်းများ</div>
+    <div class="example-list">
+        <div class="example-item">
+            <div class="example-number">1</div>
+            <div class="example-content">
+                <span class="japanese">一週間に一回掃除します‌။</span>
+                <span class="burmese">(တစ်ပတ်မှာ တစ်ကြိမ် သန့်ရှင်းရေးလုပ်ပါတယ်။)</span>
+            </div>
+        </div>
+        <div class="example-item">
+            <div class="example-number">2</div>
+            <div class="example-content">
+                <span class="japanese">一日に三回薬を飲みます‌။</span>
+                <span class="burmese">(တစ်ရက်မှာ သုံးကြိမ် ဆေးသောက်ပါတယ်။)</span>
+            </div>
+        </div>
+    </div>
+</div>
+</div>
+
+<div class="grammar-item">
+<div class="grammar-number">36</div>
+<h2 class="grammar-title">V- ました</h2>
+<div class="grammar-content">
+    <div class="section-heading meaning">အဓိပ္ပာယ်</div>
+    <p>「V- ました」: "... ခဲ့ပါတယ် / ... ပြီးပါပြီ"</p>
+    
+    <div class="section-heading usage">အသုံးပြုပုံ</div>
+    <p>ပြီးဆုံးသွားတဲ့ လုပ်ဆောင်ချက်တွေ ဒါမှမဟုတ် အတိတ်ကအကြောင်းအရာတွေကို ပြောတဲ့အခါ သုံးပါတယ်။ ကြိယာ (Verb) ရဲ့ <strong>ます (masu)</strong> နေရာမှာ <strong>ました (mashita)</strong> ကို ပြောင်းလဲအသုံးပြုရပါတယ်။</p>
+    
+    <div class="section-heading examples">ဥပမာစာကြောင်းများ</div>
+    <div class="example-list">
+        <div class="example-item">
+            <div class="example-number">1</div>
+            <div class="example-content">
+                <span class="japanese">昨日、映画を見ました‌။</span>
+                <span class="burmese">(မနေ့က ရုပ်ရှင်ကြည့်ခဲ့ပါတယ်။)</span>
+            </div>
+        </div>
+        <div class="example-item">
+            <div class="example-number">2</div>
+            <div class="example-content">
+                <span class="japanese">先週、日本に来ました‌။</span>
+                <span class="burmese">(ပြီးခဲ့တဲ့ပတ်က ဂျပန်ကို လာခဲ့ပါတယ်။)</span>
+            </div>
+        </div>
+        <div class="example-item">
+            <div class="example-number">3</div>
+            <div class="example-content">
+                <span class="japanese">もうごはんを食べました‌။</span>
+                <span class="burmese">(ထမင်းစားပြီးပါပြီ။)</span>
+            </div>
+        </div>
+    </div>
+</div>
+</div>
+
+<div class="grammar-item">
+<div class="grammar-number">37</div>
+<h2 class="grammar-title">V- ませんでした / V- なかった‌です</h2>
+<div class="grammar-content">
+    <div class="section-heading meaning">အဓိပ္ပာယ်</div>
+    <p>「V- ませんでした / V- なかった‌です」: "... မလုပ်ခဲ့ပါဘူး"</p>
+    
+    <div class="section-heading usage">အသုံးပြုပုံ</div>
+    <p>အတိတ်က အကြောင်းအရာတစ်ခုကို မလုပ်ခဲ့ကြောင်း ငြင်းဆိုတဲ့အခါ သုံးပါတယ်။ <strong>V- ませんでした</strong> က ပိုမိုယဉ်ကျေးပြီး၊ <strong>V- なかった‌です</strong> ကတော့ နေ့စဉ်စကားပြောမှာ သုံးတဲ့ ယဉ်ကျေးတဲ့ အငြင်းပုံစံဖြစ်ပါတယ်။</p>
+    
+    <div class="section-heading examples">ဥပမာစာကြောင်းများ</div>
+    <div class="example-list">
+        <div class="example-item">
+            <div class="example-number">1</div>
+            <div class="example-content">
+                <span class="japanese">昨日は勉強しませんでした‌။</span>
+                <span class="burmese">(မနေ့က စာမလုပ်ခဲ့ပါဘူး။)</span>
+            </div>
+        </div>
+        <div class="example-item">
+            <div class="example-number">2</div>
+            <div class="example-content">
+                <span class="japanese">朝ごはんは食べなかった‌です‌။</span>
+                <span class="burmese">(မနက်စာ မစားခဲ့ပါဘူး။)</span>
+            </div>
+        </div>
+    </div>
+</div>
+</div>
+
+<div class="grammar-item">
+<div class="grammar-number">38</div>
+<h2 class="grammar-title">N [‌နေရာ] ‌へ 行きます / ‌来ます / ‌帰ります</h2>
+<div class="grammar-content">
+    <div class="section-heading meaning">အဓိပ္ပာယ်</div>
+    <p>「N ‌へ 行きます / ‌来ます / ‌帰ります」: "N (နေရာ) ကို သွားတယ် / လာတယ် / ပြန်တယ်"</p>
+    
+    <div class="section-heading usage">အသုံးပြုပုံ</div>
+    <p>ရွေ့လျားသွားလာခြင်းပြတဲ့ ကြိယာတွေနဲ့ တွဲသုံးပါတယ်။ <strong>‌へ (e)</strong> က ဦးတည်ရာနေရာကို ညွှန်ပြတဲ့ Particle ဖြစ်ပါတယ်။ စာရေးတဲ့အခါ "he" လို့ ရေးပေမယ့် Particle အနေနဲ့ သုံးရင် "e" (အဲ) လို့ အသံထွက်ရပါတယ်။</p>
+    
+    <div class="section-heading examples">ဥပမာစာကြောင်းများ</div>
+    <div class="example-list">
+        <div class="example-item">
+            <div class="example-number">1</div>
+            <div class="example-content">
+                <span class="japanese">スーパーへ行きます‌။</span>
+                <span class="burmese">(စူပါမားကတ်ကို သွားပါတယ်။)</span>
+            </div>
+        </div>
+        <div class="example-item">
+            <div class="example-number">2</div>
+            <div class="example-content">
+                <span class="japanese">うちへ帰ります‌။</span>
+                <span class="burmese">(အိမ်ပြန်ပါတယ်။)</span>
+            </div>
+        </div>
+    </div>
+</div>
+</div>
+
+<div class="grammar-item">
+<div class="grammar-number">39</div>
+<h2 class="grammar-title">N [ယာဉ်] ‌で 行きます / ‌来ます / ‌帰ります</h2>
+<div class="grammar-content">
+    <div class="section-heading meaning">အဓိပ္ပာယ်</div>
+    <p>「N ‌で 行きます」: "N (ယာဉ်) နဲ့ သွားပါတယ်"</p>
+    
+    <div class="section-heading usage">အသုံးပြုပုံ</div>
+    <p>သွားလာရာမှာ အသုံးပြုတဲ့ သယ်ယူပို့ဆောင်ရေးယာဉ် (ဥပမာ - ကား၊ ရထား) ကို ဖော်ပြတဲ့အခါ <strong>‌で (de)</strong> particle ကို သုံးပါတယ်။ မြန်မာလို "...နဲ့" ဆိုတဲ့ အဓိပ္ပာယ်ပါ။</p>
+    
+    <div class="section-heading examples">ဥပမာစာကြောင်းများ</div>
+    <div class="example-list">
+        <div class="example-item">
+            <div class="example-number">1</div>
+            <div class="example-content">
+                <span class="japanese">バスで行きます‌။</span>
+                <span class="burmese">(ဘတ်စ်ကားနဲ့ သွားပါတယ်။)</span>
+            </div>
+        </div>
+        <div class="example-item">
+            <div class="example-number">2</div>
+            <div class="example-content">
+                <span class="japanese">電車で来ました‌။</span>
+                <span class="burmese">(ရထားနဲ့ လာခဲ့ပါတယ်။)</span>
+            </div>
+        </div>
+    </div>
+</div>
+</div>
+
+<div class="grammar-item">
+<div class="grammar-number">40</div>
+<h2 class="grammar-title">N [လူ/တိရစ္ဆာန်] ‌と 行きます / ‌来ます / ‌帰ります</h2>
+<div class="grammar-content">
+    <div class="section-heading meaning">အဓိပ္ပာယ်</div>
+    <p>「N ‌と 行きます」: "N နဲ့အတူ သွားပါတယ်"</p>
+    
+    <div class="section-heading usage">အသုံးပြုပုံ</div>
+    <p>တစ်စုံတစ်ယောက်နဲ့အတူ သွားလာတဲ့အခါ အဖော်အဖြစ် လိုက်ပါသူရဲ့ နောက်မှာ <strong>‌と (to)</strong> particle ကို သုံးပါတယ်။ မြန်မာလို "...နဲ့ / ...နဲ့အတူ" လို့ အဓိပ္ပာယ်ရပါတယ်။</p>
+    
+    <div class="section-heading examples">ဥပမာစာကြောင်းများ</div>
+    <div class="example-list">
+        <div class="example-item">
+            <div class="example-number">1</div>
+            <div class="example-content">
+                <span class="japanese">友達と日本へ来ました‌။</span>
+                <span class="burmese">(သူငယ်ချင်းနဲ့အတူ ဂျပန်ကို လာခဲ့ပါတယ်။)</span>
+            </div>
+        </div>
+        <div class="example-item">
+            <div class="example-number">2</div>
+            <div class="example-content">
+                <span class="japanese">家族とデパートへ行きます‌။</span>
+                <span class="burmese">(မိသားစုနဲ့အတူ ကုန်တိုက်ကို သွားပါတယ်။)</span>
+            </div>
+        </div>
+    </div>
+</div>
+</div>
+
+        <footer>
+            <p>Basic Grammar for Japanese</p>
+            <p>Grammar Study Page For JFT</p>
+        </footer>
+    </div>
+</body>
+</html>
+
+
