@@ -1,0 +1,319 @@
+<!DOCTYPE html>
+<html lang="my">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Grammar for JFT A1/A2</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            font-family: 'Padauk', sans-serif;
+        }
+        body {
+            background-color: #f5f7fa;
+            color: #333;
+            padding: 20px;
+            line-height: 1.6;
+            background-image: linear-gradient(135deg, #f5f7fa 0%, #e4edf5 100%);
+            min-height: 100vh;
+        }
+        .container {
+            max-width: 850px;
+            margin: 0 auto;
+            background-color: white;
+            padding: 30px 40px;
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+            border: 1px solid #e1e8ed;
+        }
+        h1 {
+            text-align: center;
+            color: #2c3e50;
+            margin-bottom: 10px;
+            padding-bottom: 15px;
+            border-bottom: 3px solid #3498db;
+            font-size: 2.2em;
+            position: relative;
+        }
+        h1::after {
+            content: '';
+            position: absolute;
+            bottom: -3px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 100px;
+            height: 3px;
+            background-color: #e74c3c;
+        }
+        .subtitle {
+            text-align: center;
+            color: #7f8c8d;
+            font-size: 1.1em;
+            margin-bottom: 35px;
+            font-weight: 500;
+        }
+        .main-buttons {
+            display: flex;
+            justify-content: center;
+            gap: 30px;
+            margin-bottom: 40px;
+        }
+        .main-btn {
+            padding: 20px 40px;
+            font-size: 1.5em;
+            font-weight: bold;
+            border: none;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-width: 200px;
+            letter-spacing: 0.5px;
+        }
+        #a1-btn {
+            background: linear-gradient(135deg, #1abc9c, #16a085);
+            color: white;
+        }
+        #a1-btn:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(26, 188, 156, 0.3);
+        }
+        #a2-btn {
+            background: linear-gradient(135deg, #9b59b6, #8e44ad);
+            color: white;
+        }
+        #a2-btn:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(155, 89, 182, 0.3);
+        }
+        .parts-container {
+            background-color: #f8fafc;
+            padding: 25px;
+            border-radius: 15px;
+            margin-top: 20px;
+            display: none;
+            border-left: 6px solid #3498db;
+            box-shadow: inset 0 2px 10px rgba(0, 0, 0, 0.03);
+        }
+        .parts-title {
+            font-size: 1.4em;
+            color: #2c3e50;
+            margin-top: 0;
+            margin-bottom: 25px;
+            text-align: center;
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+        .parts-title::before {
+            content: "📚";
+            font-size: 1.2em;
+        }
+        .parts-grid {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 15px;
+        }
+        .part-link {
+            display: block;
+            text-align: center;
+            padding: 16px 8px;
+            background-color: white;
+            border-radius: 10px;
+            text-decoration: none;
+            color: #2980b9;
+            font-weight: bold;
+            border: 2px solid #e3f2fd;
+            transition: all 0.25s ease;
+            font-size: 1.05em;
+        }
+        .part-link:hover {
+            background-color: #2980b9;
+            color: white;
+            border-color: #2980b9;
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(41, 128, 185, 0.2);
+        }
+        .jft-message {
+            text-align: center;
+            color: #2c3e50;
+            margin-top: 40px;
+            padding: 25px;
+            background: linear-gradient(135deg, #fef9e7, #fef5e7);
+            border-radius: 12px;
+            border-left: 5px solid #f1c40f;
+            box-shadow: 0 4px 12px rgba(241, 196, 15, 0.1);
+            font-size: 1.05em;
+        }
+        .jft-message h3 {
+            color: #e67e22;
+            margin-top: 0;
+            font-size: 1.4em;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+        .jft-message h3::before {
+            content: "✅";
+        }
+        .jft-message p {
+            margin-bottom: 10px;
+            line-height: 1.7;
+        }
+        .highlight {
+            background-color: #fff9e6;
+            padding: 3px 8px;
+            border-radius: 5px;
+            font-weight: bold;
+            color: #d35400;
+        }
+        .confidence {
+            display: inline-block;
+            background-color: #27ae60;
+            color: white;
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-weight: bold;
+            margin: 5px 0;
+            font-size: 1.1em;
+        }
+        @media (max-width: 700px) {
+            .main-buttons {
+                flex-direction: column;
+                align-items: center;
+                gap: 20px;
+            }
+            .main-btn {
+                width: 100%;
+                max-width: 300px;
+                padding: 18px 30px;
+            }
+            .parts-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            .container {
+                padding: 25px 20px;
+            }
+            h1 {
+                font-size: 1.8em;
+            }
+        }
+        .footer-note {
+            text-align: center;
+            color: #95a5a6;
+            font-size: 0.9em;
+            margin-top: 30px;
+            padding-top: 20px;
+            border-top: 1px dashed #ddd;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Grammar for JFT A1/A2</h1>
+        <div class="subtitle">Essential grammar practice for Japan Foundation Test</div>
+        
+        <div class="main-buttons">
+            <button class="main-btn" id="a1-btn">A1 Grammar</button>
+            <button class="main-btn" id="a2-btn">A2 Grammar</button>
+        </div>
+
+        <!-- A1 Parts Container - Part 1 to 7 only -->
+        <div class="parts-container" id="a1-parts">
+            <h3 class="parts-title">A1 Grammar Parts (1-7)</h3>
+            <div class="parts-grid" id="a1-links">
+                <!-- JavaScript will create Part 1-7 links here -->
+            </div>
+        </div>
+
+        <!-- A2 Parts Container - Part 1 to 8 only -->
+        <div class="parts-container" id="a2-parts">
+            <h3 class="parts-title">A2 Grammar Parts (1-8)</h3>
+            <div class="parts-grid" id="a2-links">
+                <!-- JavaScript will create Part 1-8 links here -->
+            </div>
+        </div>
+
+        <div class="jft-message">
+            <h3>JFT Exam Preparation</h3>
+            <p>This comprehensive grammar resource covers <span class="highlight">all essential topics</span> required for the Japan Foundation Test (JFT) at both A1 and A2 levels.</p>
+            <p>By practicing these grammar exercises thoroughly, you can be <span class="confidence">100% confident</span> in the grammar section of the JFT exam.</p>
+            <p><strong>Complete these exercises and you'll master the grammar needed for success!</strong></p>
+        </div>
+        
+        <div class="footer-note">
+            Click on A1 or A2 button to access grammar parts. Each part opens in a new tab.
+        </div>
+    </div>
+
+    <script>
+        const a1Btn = document.getElementById('a1-btn');
+        const a2Btn = document.getElementById('a2-btn');
+        const a1PartsContainer = document.getElementById('a1-parts');
+        const a2PartsContainer = document.getElementById('a2-parts');
+        const a1LinksContainer = document.getElementById('a1-links');
+        const a2LinksContainer = document.getElementById('a2-links');
+
+        // A1 အတွက် part 1 မှ 7 ထိသာ
+        function createA1PartLinks() {
+            a1LinksContainer.innerHTML = '';
+            
+            // Part 1 မှ 7 အထိ
+            for (let i = 1; i <= 7; i++) {
+                const link = document.createElement('a');
+                link.href = `A1/part${i}.html`;
+                link.className = 'part-link';
+                link.textContent = `Part ${i}`;
+                link.target = "_blank";
+                a1LinksContainer.appendChild(link);
+            }
+        }
+
+        // A2 အတွက် part 1 မှ 8 ထိသာ
+        function createA2PartLinks() {
+            a2LinksContainer.innerHTML = '';
+            
+            // Part 1 မှ 8 အထိ
+            for (let i = 1; i <= 8; i++) {
+                const link = document.createElement('a');
+                link.href = `A2/part${i}.html`;
+                link.className = 'part-link';
+                link.textContent = `Part ${i}`;
+                link.target = "_blank";
+                a2LinksContainer.appendChild(link);
+            }
+        }
+
+        a1Btn.addEventListener('click', function() {
+            a2PartsContainer.style.display = 'none';
+            if (a1PartsContainer.style.display === 'block') {
+                a1PartsContainer.style.display = 'none';
+            } else {
+                a1PartsContainer.style.display = 'block';
+                if (a1LinksContainer.children.length === 0) {
+                    createA1PartLinks();
+                }
+            }
+        });
+
+        a2Btn.addEventListener('click', function() {
+            a1PartsContainer.style.display = 'none';
+            if (a2PartsContainer.style.display === 'block') {
+                a2PartsContainer.style.display = 'none';
+            } else {
+                a2PartsContainer.style.display = 'block';
+                if (a2LinksContainer.children.length === 0) {
+                    createA2PartLinks();
+                }
+            }
+        });
+    </script>
+</body>
+</html>
