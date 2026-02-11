@@ -1,0 +1,638 @@
+<!DOCTYPE html>
+<html lang="my">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>A2 Grammar For JFT</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Padauk', 'Myanmar Text', sans-serif;
+        }
+        
+        body {
+            background-color: #f8f9fa;
+            color: #2c3e50;
+            line-height: 1.6;
+            padding: 0;
+        }
+        
+        /* Fixed Top Navigation Bar */
+        .top-nav {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 12px 30px;
+            background-color: #2c3e50;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            z-index: 1000;
+        }
+        
+        .nav-btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            background-color: rgba(255,255,255,0.15);
+            color: white;
+            padding: 10px 25px;
+            font-size: 1rem;
+            text-decoration: none;
+            border-radius: 5px;
+            transition: all 0.3s ease;
+            border: 1px solid rgba(255,255,255,0.2);
+            cursor: pointer;
+            gap: 8px;
+            font-weight: 500;
+        }
+        
+        .nav-btn:hover {
+            background-color: rgba(255,255,255,0.25);
+            border-color: rgba(255,255,255,0.3);
+        }
+        
+        .nav-btn.back {
+            background-color: #7f8c8d;
+            border: none;
+        }
+        
+        .nav-btn.back:hover {
+            background-color: #95a5a6;
+        }
+        
+        .nav-btn.next {
+            background-color: #3498db;
+            border: none;
+        }
+        
+        .nav-btn.next:hover {
+            background-color: #5dade2;
+        }
+        
+        .arrow {
+            font-size: 1.2rem;
+            line-height: 1;
+        }
+        
+        .container {
+            max-width: 1000px;
+            margin: 80px auto 0;
+            padding: 20px;
+        }
+        
+        header {
+            text-align: center;
+            margin-bottom: 30px;
+            padding: 20px;
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+        }
+        
+        h1 {
+            font-size: 2.2rem;
+            margin-bottom: 10px;
+            color: #2c3e50;
+        }
+        
+        .subtitle {
+            font-size: 1.1rem;
+            color: #7f8c8d;
+        }
+        
+        .grammar-list {
+            margin-top: 20px;
+        }
+        
+        .grammar-item {
+            background-color: white;
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+            border-left: 4px solid #3498db;
+            position: relative;
+            padding-left: 50px;
+        }
+        
+        .grammar-number {
+            position: absolute;
+            top: 15px;
+            left: 15px;
+            background-color: #3498db;
+            color: white;
+            width: 30px;
+            height: 30px;
+            border-radius: 5px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 1rem;
+        }
+        
+        .grammar-title {
+            font-size: 1.4rem;
+            color: #2c3e50;
+            margin-bottom: 15px;
+            padding-bottom: 8px;
+            border-bottom: 1px solid #eee;
+        }
+        
+        .grammar-content {
+            padding: 5px 0;
+        }
+        
+        .section-heading {
+            font-weight: bold;
+            color: #2c3e50;
+            margin-top: 15px;
+            margin-bottom: 5px;
+            font-size: 1.1rem;
+        }
+        
+        .section-heading::after {
+            content: ':';
+            margin-right: 5px;
+        }
+        
+        p {
+            margin-bottom: 10px;
+            color: #34495e;
+            text-align: justify;
+        }
+        
+        .meaning {
+            color: #27ae60;
+        }
+        
+        .usage {
+            color: #2980b9;
+        }
+        
+        .examples {
+            color: #e74c3c;
+        }
+        
+        .example-list {
+            padding-left: 20px;
+            margin-top: 5px;
+        }
+        
+        .example-item {
+            margin-bottom: 10px;
+            display: flex;
+            align-items: flex-start;
+        }
+        
+        .example-number {
+            background-color: #f8f9fa;
+            color: #2c3e50;
+            width: 25px;
+            height: 25px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.9rem;
+            margin-right: 10px;
+            flex-shrink: 0;
+            border: 1px solid #ddd;
+        }
+        
+        .example-content {
+            flex-grow: 1;
+        }
+        
+        .japanese {
+            font-weight: bold;
+            color: #2c3e50;
+            display: block;
+        }
+        
+        .burmese {
+            color: #7f8c8d;
+            display: block;
+            font-style: normal;
+        }
+        
+        footer {
+            text-align: center;
+            margin-top: 40px;
+            padding: 20px;
+            color: #7f8c8d;
+            font-size: 0.9rem;
+            border-top: 1px solid #ddd;
+        }
+        
+        @media (max-width: 768px) {
+            .top-nav {
+                padding: 10px 15px;
+            }
+            
+            .nav-btn {
+                padding: 8px 18px;
+                font-size: 0.95rem;
+            }
+            
+            .container {
+                margin-top: 70px;
+                padding: 15px;
+            }
+            
+            h1 {
+                font-size: 1.8rem;
+            }
+            
+            .grammar-item {
+                padding: 15px;
+                padding-left: 45px;
+            }
+            
+            .grammar-number {
+                width: 25px;
+                height: 25px;
+                font-size: 0.9rem;
+            }
+            
+            .example-number {
+                width: 22px;
+                height: 22px;
+                font-size: 0.8rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .top-nav {
+                padding: 8px 12px;
+            }
+            
+            .nav-btn {
+                padding: 8px 12px;
+                font-size: 0.9rem;
+            }
+            
+            .arrow {
+                font-size: 1rem;
+            }
+            
+            .container {
+                margin-top: 65px;
+            }
+            
+            h1 {
+                font-size: 1.5rem;
+            }
+        }
+    </style>
+    <link href="https://fonts.googleapis.com/css2?family=Padauk&display=swap" rel="stylesheet">
+</head>
+<body>
+    <!-- Fixed Top Navigation Bar - Back and Next Buttons -->
+    <div class="top-nav">
+        <a href="grammar.html" class="nav-btn back">
+            <span class="arrow">←</span> Back
+        </a>
+        <a href="https://shine987.github.io/formservice/A2/part2.html" class="nav-btn next">
+            Next Part <span class="arrow">→</span>
+        </a>
+    </div>
+
+    <div class="container">
+        <header>
+            <h1>A2 Grammar for JFT</h1>
+            <p class="subtitle">A2 Level for JFT Exam</p>
+        </header>
+        
+        <div class="grammar-list" id="grammar-list">
+     
+
+<div class="grammar-item">
+<div class="grammar-number">1</div>
+<h2 class="grammar-title">N1 は N2 です</h2>
+<div class="grammar-content">
+    <div class="section-heading meaning">အဓိပ္ပာယ်</div>
+    <p>「N1 は N2 です」: "N1 ဟာ N2 ဖြစ်ပါတယ်။"</p>
+    
+    <div class="section-heading usage">အသုံးပြုပုံ</div>
+    <p>ဒါကတော့ ဂျပန်စာမှာ အခြေခံအကျဆုံး ဝါကျတည်ဆောက်ပုံ ဖြစ်ပါတယ်။ <strong>N1</strong> (Subject) အကြောင်းကို <strong>N2</strong> (Noun) ဖြစ်တယ်လို့ မိတ်ဆက်တဲ့အခါ ဒါမှမဟုတ် ဖော်ပြတဲ့အခါ သုံးပါတယ်။ <strong>は</strong> ကို "wa" လို့ အသံထွက်ရပါမယ်။</p>
+    
+    <div class="section-heading examples">ဥပမာစာကြောင်းများ</div>
+    <div class="example-list">
+        <div class="example-item">
+            <div class="example-number">1</div>
+            <div class="example-content">
+                <span class="japanese">私は学生です。</span>
+                <span class="burmese">(ကျွန်တော် ကျောင်းသား ဖြစ်ပါတယ်။)</span>
+            </div>
+        </div>
+        <div class="example-item">
+            <div class="example-number">2</div>
+            <div class="example-content">
+                <span class="japanese">ミラさんはエンジニアです。</span>
+                <span class="burmese">(မီလာဆန်က အင်ဂျင်နီယာ ဖြစ်ပါတယ်။)</span>
+            </div>
+        </div>
+    </div>
+</div>
+</div>
+
+
+<div class="grammar-item">
+<div class="grammar-number">2</div>
+<h2 class="grammar-title">N1 は N2 ではありません / じゃないです</h2>
+<div class="grammar-content">
+    <div class="section-heading meaning">အဓိပ္ပာယ်</div>
+    <p>「N1 は N2 ではありません」: "N1 ဟာ N2 မဟုတ်ပါဘူး။"</p>
+    
+    <div class="section-heading usage">အသုံးပြုပုံ</div>
+    <p><strong>N1 は N2 です</strong> ရဲ့ အငြင်းပုံစံ (Negative form) ဖြစ်ပါတယ်။ <strong>ではありません</strong> က ပိုမိုယဉ်ကျေးပြီး၊ <strong>じゃないです</strong> ကတော့ နေ့စဉ်စကားပြောမှာ ပိုပြီး အသုံးများပါတယ်။</p>
+
+    <div class="section-heading examples">ဥပမာစာကြောင်းများ</div>
+    <div class="example-list">
+        <div class="example-item">
+            <div class="example-number">1</div>
+            <div class="example-content">
+                <span class="japanese">私は先生ではありません。</span>
+                <span class="burmese">(ကျွန်တော် ဆရာ မဟုတ်ပါဘူး။)</span>
+            </div>
+        </div>
+        <div class="example-item">
+            <div class="example-number">2</div>
+            <div class="example-content">
+                <span class="japanese">サントスさんは学生じゃないです‌။</span>
+                <span class="burmese">(ဆန်းတိုးဆန်က ကျောင်းသား မဟုတ်ပါဘူး။)</span>
+            </div>
+        </div>
+    </div>
+</div>
+</div>
+
+<div class="grammar-item">
+<div class="grammar-number">3</div>
+<h2 class="grammar-title">N1 は N2 ですか</h2>
+<div class="grammar-content">
+    <div class="section-heading meaning">အဓိပ္ပာယ်</div>
+    <p>「N1 は N2 ですか」: "N1 ဟာ N2 လား? / ဖြစ်ပါသလား?"</p>
+    
+    <div class="section-heading usage">အသုံးပြုပုံ</div>
+    <p>ဝါကျအဆုံးမှာ <strong>か</strong> ကို ထည့်လိုက်ခြင်းဖြင့် မေးခွန်းပုံစံ ပြောင်းလဲသွားတာ ဖြစ်ပါတယ်။ ဂျပန်စာမှာ မေးခွန်းသင်္ကေတ (?) အစား ဝါကျအဆုံးမှာ <strong>か</strong> ကိုပဲ သုံးလေ့ရှိပါတယ်။</p>
+    
+
+
+    <div class="section-heading examples">ဥပမာစာကြောင်းများ</div>
+    <div class="example-list">
+        <div class="example-item">
+            <div class="example-number">1</div>
+            <div class="example-content">
+                <span class="japanese">あなたは学生ですか。</span>
+                <span class="burmese">(သင်က ကျောင်းသားလား?)</span>
+            </div>
+        </div>
+        <div class="example-item">
+            <div class="example-number">2</div>
+            <div class="example-content">
+                <span class="japanese">ミラさんは銀行員ですか‌။</span>
+                <span class="burmese">(မီလာဆန်က ဘဏ်ဝန်ထမ်းလား?)</span>
+            </div>
+        </div>
+    </div>
+</div>
+</div>
+
+<div class="grammar-item">
+<div class="grammar-number">4</div>
+<h2 class="grammar-title">N も</h2>
+<div class="grammar-content">
+    <div class="section-heading meaning">အဓိပ္ပာယ်</div>
+    <p>「N も」: "N လည်းပဲ / N လည်းပဲ ဖြစ်ပါတယ်။"</p>
+    
+    <div class="section-heading usage">အသုံးပြုပုံ</div>
+    <p>ရှေ့မှာပြောခဲ့တဲ့ အကြောင်းအရာနဲ့ ထပ်တူဖြစ်နေတဲ့အခါ <strong>は (wa)</strong> နေရာမှာ <strong>も (mo)</strong> ကို အစားထိုးပြီး သုံးပါတယ်။ မြန်မာလို "...လည်းပဲ" ဆိုတဲ့ အဓိပ္ပာယ်ပါ။</p>
+    
+
+    <div class="section-heading examples">ဥပမာစာကြောင်းများ</div>
+    <div class="example-list">
+        <div class="example-item">
+            <div class="example-number">1</div>
+            <div class="example-content">
+                <span class="japanese">田中さんは日本人です。ミラーさんも日本人です。</span>
+                <span class="burmese">(တာနာကာဆန်က ဂျပန်လူမျိုးပါ။ မီလာဆန်လည်း ဂျပန်လူမျိုးဖြစ်ပါတယ်။)</span>
+            </div>
+        </div>
+        <div class="example-item">
+            <div class="example-number">2</div>
+            <div class="example-content">
+                <span class="japanese">私もベトナム人です。</span>
+                <span class="burmese">(ကျွန်တော်လည်း ဗီယက်နမ်လူမျိုး ဖြစ်ပါတယ်။)</span>
+            </div>
+        </div>
+    </div>
+</div>
+</div>
+
+<div class="grammar-item">
+<div class="grammar-number">5</div>
+<h2 class="grammar-title">N1 の N2</h2>
+<div class="grammar-content">
+    <div class="section-heading meaning">အဓိပ္ပာယ်</div>
+    <p>「N1 の N2」: "N1 ရဲ့ N2"</p>
+    
+    <div class="section-heading usage">အသုံးပြုပုံ</div>
+    <p>နာမ်နှစ်ခုကို ဆက်သွယ်ပေးတဲ့အခါ သုံးပါတယ်။ များသောအားဖြင့် ရှေ့နာမ် <strong>N1</strong> က နောက်နာမ် <strong>N2</strong> ကို ပိုင်ဆိုင်ကြောင်း (Possession) ဒါမှမဟုတ် အဲဒီ N2 က ဘယ်အဖွဲ့အစည်းကလဲဆိုတာကို ဖော်ပြချင်တဲ့အခါ <strong>の (no)</strong> ကို သုံးပါတယ်။</p>
+    
+
+    <div class="section-heading examples">ဥပမာစာကြောင်းများ</div>
+    <div class="example-list">
+        <div class="example-item">
+            <div class="example-number">1</div>
+            <div class="example-content">
+                <span class="japanese">これは私の本です。</span>
+                <span class="burmese">(ဒါက ကျွန်တော့်ရဲ့ စာအုပ် ဖြစ်ပါတယ်။)</span>
+            </div>
+        </div>
+        <div class="example-item">
+            <div class="example-number">2</div>
+            <div class="example-content">
+                <span class="japanese">ミラーさんは IMC の社員です。</span>
+                <span class="burmese">(မီလာဆန်က IMC ရဲ့ ဝန်ထမ်း ဖြစ်ပါတယ်။)</span>
+            </div>
+        </div>
+    </div>
+</div>
+</div>
+
+<div class="grammar-item">
+<div class="grammar-number">6</div>
+<h2 class="grammar-title">～さん</h2>
+<div class="grammar-content">
+    <div class="section-heading meaning">အဓိပ္ပာယ်</div>
+    <p>「～さん (san)」: "... ဆန် (ဦး/ဒေါ်/မောင်/မ)"</p>
+    
+    <div class="section-heading usage">အသုံးပြုပုံ</div>
+    <p>ဂျပန်စာမှာ တစ်ဖက်လူရဲ့ နာမည်နောက်မှာ <strong>さん (san)</strong> ကို ထည့်ပြောခြင်းက ယဉ်ကျေးမှု တစ်ရပ် ဖြစ်ပါတယ်။ ကိုယ့်နာမည်နောက်မှာတော့ <strong>さん</strong> ကို ဘယ်တော့မှ ထည့်မသုံးရပါဘူး။</p>
+    
+    
+
+    <div class="section-heading examples">ဥပမာစာကြောင်းများ</div>
+    <div class="example-list">
+        <div class="example-item">
+            <div class="example-number">1</div>
+            <div class="example-content">
+                <span class="japanese">あの方は佐藤さんです。</span>
+                <span class="burmese">(ဟိုပုဂ္ဂိုလ်ကတော့ ဆာတိုးဆန် (ဦး/မောင် ဆာတိုး) ဖြစ်ပါတယ်။)</span>
+            </div>
+        </div>
+        <div class="example-item">
+            <div class="example-number">2</div>
+            <div class="example-content">
+                <span class="japanese">お名前は？</span>
+                <span class="burmese">(နာမည်က ဘယ်သူပါလဲ?)</span>
+            </div>
+        </div>
+    </div>
+</div>
+</div>
+
+ <div class="grammar-item">
+<div class="grammar-number">7</div>
+<h2 class="grammar-title">これ / それ / あれ</h2>
+<div class="grammar-content">
+    <div class="section-heading meaning">အဓိပ္ပာယ်</div>
+    <p>「これ / それ / あれ」: "ဒါ / အဲဒါ / ဟိုဟာ"</p>
+    
+    <div class="section-heading usage">အသုံးပြုပုံ</div>
+    <p>အရာဝတ္ထုတွေကို ညွှန်ပြတဲ့အခါ သုံးပါတယ်။<br>
+    - <strong>これ (kore)</strong>: ပြောသူနဲ့ နီးတဲ့အရာ (ဒါ)<br>
+    - <strong>それ (sore)</strong>: နားထောင်သူနဲ့ နီးတဲ့အရာ (အဲဒါ)<br>
+    - <strong>あれ (are)</strong>: နှစ်ယောက်လုံးနဲ့ ဝေးတဲ့အရာ (ဟိုဟာ)</p>
+    
+
+    <div class="section-heading examples">ဥပမာစာကြောင်းများ</div>
+    <div class="example-list">
+        <div class="example-item">
+            <div class="example-number">1</div>
+            <div class="example-content">
+                <span class="japanese">これは辞書です。</span>
+                <span class="burmese">(ဒါက အဘိဓာန် ဖြစ်ပါတယ်။)</span>
+            </div>
+        </div>
+        <div class="example-item">
+            <div class="example-number">2</div>
+            <div class="example-content">
+                <span class="japanese">それは私の傘です。</span>
+                <span class="burmese">(အဲဒါက ကျွန်တော့်ထီး ဖြစ်ပါတယ်။)</span>
+            </div>
+        </div>
+    </div>
+</div>
+</div>
+
+<div class="grammar-item">
+<div class="grammar-number">8</div>
+<h2 class="grammar-title">この N / その N / あの N</h2>
+<div class="grammar-content">
+    <div class="section-heading meaning">အဓိပ္ပာယ်</div>
+    <p>「この / その / あの + N」: "ဒီ (နာမ်) / အဲဒီ (နာမ်) / ဟို (နာမ်)"</p>
+    
+    <div class="section-heading usage">အသုံးပြုပုံ</div>
+    <p><strong>これ/それ/あれ</strong> နဲ့ အဓိပ္ပာယ်တူပေမယ့် ဒီစကားလုံးတွေရဲ့ နောက်မှာတော့ <strong>နာမ် (Noun)</strong> တစ်ခု အမြဲတမ်း ကပ်လိုက်ရပါတယ်။ "ဒီစာအုပ်"၊ "ဟိုလူ" စသဖြင့် အတိအကျ ညွှန်ပြချင်တဲ့အခါ သုံးပါတယ်။</p>
+    
+   
+    <div class="section-heading examples">ဥပမာစာကြောင်းများ</div>
+    <div class="example-list">
+        <div class="example-item">
+            <div class="example-number">1</div>
+            <div class="example-content">
+                <span class="japanese">この本は私のです。</span>
+                <span class="burmese">(ဒီစာအုပ်က ကျွန်တော့်ဟာ ဖြစ်ပါတယ်။)</span>
+            </div>
+        </div>
+        <div class="example-item">
+            <div class="example-number">2</div>
+            <div class="example-content">
+                <span class="japanese">あの方（ひと）はどなたですか。</span>
+                <span class="burmese">(ဟိုပုဂ္ဂိုလ်က ဘယ်သူပါလဲ?)</span>
+            </div>
+        </div>
+    </div>
+</div>
+</div>
+
+<div class="grammar-item">
+<div class="grammar-number">9</div>
+<h2 class="grammar-title">そうです / そうじゃありません</h2>
+<div class="grammar-content">
+    <div class="section-heading meaning">အဓိပ္ပာယ်</div>
+    <p>「そうです / そうじゃありません」: "ဟုတ်ပါတယ် / မဟုတ်ပါဘူး"</p>
+    
+    <div class="section-heading usage">အသုံးပြုပုံ</div>
+    <p>တစ်ဖက်လူရဲ့ အမေးကို "ဟုတ်ပါတယ်" ဒါမှမဟုတ် "မဟုတ်ပါဘူး" လို့ အတိုကောက် ပြန်ဖြေတဲ့အခါ သုံးပါတယ်။ <strong>Noun です</strong> ကို ထပ်ခါတလဲလဲ မပြောချင်တဲ့အခါ <strong>そうです</strong> ကို သုံးရတာ ပိုအဆင်ပြေပါတယ်။</p>
+    
+
+    <div class="section-heading examples">ဥပမာစာကြောင်းများ</div>
+    <div class="example-list">
+        <div class="example-item">
+            <div class="example-number">1</div>
+            <div class="example-content">
+                <span class="japanese">「それはテレカですか。」「はい、そうです。」</span>
+                <span class="burmese">("အဲဒါ တယ်လီဖုန်းကတ်လား?" "ဟုတ်ကဲ့၊ ဟုတ်ပါတယ်။")</span>
+            </div>
+        </div>
+        <div class="example-item">
+            <div class="example-number">2</div>
+            <div class="example-content">
+                <span class="japanese">「これはあなたの辞書ですか。」「いいえ、そうじゃありません。」</span>
+                <span class="burmese">("ဒါက သင့်အဘိဓာန်လား?" "ဟင့်အင်း၊ မဟုတ်ပါဘူး။")</span>
+            </div>
+        </div>
+    </div>
+</div>
+</div>
+
+<div class="grammar-item">
+<div class="grammar-number">10</div>
+<h2 class="grammar-title">N1 ですか、N2 ですか</h2>
+<div class="grammar-content">
+    <div class="section-heading meaning">အဓိပ္ပာယ်</div>
+    <p>「N1 ですか、N2 ですか」: "N1 လား၊ N2 လား?"</p>
+    
+    <div class="section-heading usage">အသုံးပြုပုံ</div>
+    <p>ရွေးချယ်စရာ နှစ်ခုပေးပြီး မေးမြန်းတဲ့အခါ သုံးပါတယ်။ အဖြေပြန်ပေးရင် <strong>はい/いいえ</strong> နဲ့ ဖြေစရာမလိုဘဲ မိမိရွေးချယ်တဲ့ နာမ်ကိုပဲ တိုက်ရိုက်ဖြေဆိုရပါတယ်။</p>
+    
+
+    <div class="section-heading examples">ဥပမာစာကြောင်းများ</div>
+    <div class="example-list">
+        <div class="example-item">
+            <div class="example-number">1</div>
+            <div class="example-content">
+                <span class="japanese">これは「９」ですか、「７」ですか。</span>
+                <span class="burmese">(ဒါက '၉' လား၊ '၇' လား?)</span>
+            </div>
+        </div>
+        <div class="example-item">
+            <div class="example-number">2</div>
+            <div class="example-content">
+                <span class="japanese">ミラーさんは日本人ですか、アメリカ人ですか。</span>
+                <span class="burmese">(မီလာဆန်က ဂျပန်လူမျိုးလား၊ အမေရိကန်လူမျိုးလား?)</span>
+            </div>
+        </div>
+    </div>
+</div>
+</div>
+
+
+        <footer>
+            <p>A2 lvl Grammar for Japanese</p>
+            <p>Grammar Study Page For JFT</p>
+        </footer>
+    </div>
+</body>
+</html>
+
+
