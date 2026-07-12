@@ -1,0 +1,562 @@
+<!DOCTYPE html>
+<html lang="en">
+<head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>JLPT N4 · Kotoba Note (Japanese to Myanmar)</title>
+<style>
+    /* ========== ORIGINAL CSS (unchanged) ========== */
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    :root { --primary-color: #1a73e8; --primary-dark: #1557b0; --success-color: #0f9d58; --danger-color: #d93025; --warning-color: #f4b400; --light-bg: #f8f9fa; --border-color: #dadce0; --text-primary: #202124; --text-secondary: #5f6368; --shadow-sm: 0 1px 2px 0 rgba(0,0,0,0.05); --shadow-md: 0 2px 4px 0 rgba(0,0,0,0.1); --shadow-lg: 0 4px 6px -1px rgba(0,0,0,0.1); --radius-sm: 6px; --radius-md: 8px; --radius-lg: 12px; --transition: all 0.2s ease; }
+    body { font-family: 'Times New Roman', 'Georgia', serif; background: #f5f5f5; min-height: 100vh; color: #222; }
+    .sticky-header { position: sticky; top: 0; z-index: 100; background: white; box-shadow: 0 1px 3px rgba(0,0,0,0.1); padding: 6px 15px; display: flex; align-items: center; justify-content: space-between; border-bottom: 1px solid #ddd; }
+    .header-left { display: flex; align-items: center; gap: 12px; }
+    .back-btn { background: none; border: none; font-size: 1.1rem; cursor: pointer; color: #333; padding: 4px 8px; display: flex; align-items: center; gap: 4px; }
+    .back-btn:hover { background: #f0f0f0; border-radius: 4px; }
+    .timer-compact { background: #333; color: white; padding: 4px 12px; border-radius: 20px; display: flex; align-items: center; gap: 6px; font-size: 0.9rem; font-family: monospace; }
+    .timer-compact.warning { background: #d32f2f; }
+    .section-tabs { background: white; padding: 6px 15px; border-bottom: 1px solid #ddd; position: sticky; top: 41px; z-index: 99; display: flex; gap: 4px; flex-wrap: wrap; }
+    .tab-btn { padding: 4px 10px; background: #f0f0f0; border: 1px solid #ccc; border-radius: 3px; cursor: pointer; font-size: 0.75rem; color: #333; min-width: 50px; text-align: center; font-family: 'Arial', sans-serif; }
+    .tab-btn.active { background: #333; border-color: #333; color: white; }
+    .tab-btn.completed { background: #2e7d32; border-color: #2e7d32; color: white; }
+    .tab-btn:disabled { opacity: 0.5; cursor: not-allowed; }
+    .main-container { max-width: 900px; margin: 15px auto; padding: 0 15px; }
+    .modal-overlay { position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.5); display: flex; align-items: center; justify-content: center; z-index: 1000; }
+    .modal-content { background: white; border-radius: 8px; padding: 25px; max-width: 400px; width: 90%; box-shadow: 0 5px 20px rgba(0,0,0,0.2); }
+    .modal-title { font-size: 1.4rem; font-weight: 600; color: #333; margin-bottom: 15px; text-align: center; border-bottom: 1px solid #ddd; padding-bottom: 10px; }
+    .photo-upload-container { display: flex; flex-direction: column; align-items: center; gap: 10px; margin-bottom: 15px; }
+    .photo-preview { width: 100px; height: 100px; border-radius: 50%; border: 2px solid #333; object-fit: cover; }
+    .upload-btn { background: #f0f0f0; border: 1px solid #ccc; padding: 6px 16px; border-radius: 4px; cursor: pointer; font-size: 0.9rem; }
+    .upload-btn:hover { background: #e0e0e0; }
+    #photoInput { display: none; }
+    .modal-form { display: flex; flex-direction: column; gap: 12px; }
+    .modal-input { padding: 10px 12px; border: 1px solid #ccc; border-radius: 4px; font-size: 0.95rem; }
+    .modal-input:focus { outline: none; border-color: #333; }
+    .modal-btn { background: #333; color: white; border: none; padding: 12px; border-radius: 4px; font-size: 1rem; cursor: pointer; margin-top: 10px; }
+    .modal-btn:hover { background: #555; }
+    .section-container { background: white; border-radius: 8px; padding: 20px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); margin-bottom: 20px; display: none; }
+    .section-container.active { display: block; }
+    .section-footer { display: flex; justify-content: flex-end; margin-top: 20px; padding-top: 10px; border-top: 1px solid #e0e0e0; }
+    .section-end-btn { background: #f0f0f0; border: 1px solid #ccc; padding: 8px 24px; border-radius: 4px; font-size: 0.9rem; cursor: pointer; font-weight: 500; }
+    .section-end-btn:hover { background: #e0e0e0; }
+    .mondai-group { margin-bottom: 20px; padding: 15px; background: #fafafa; border: 1px solid #e0e0e0; border-radius: 6px; }
+    .mondai-title { font-size: 1rem; font-weight: 600; color: #333; margin-bottom: 12px; display: flex; justify-content: space-between; border-bottom: 1px dotted #ccc; padding-bottom: 5px; }
+    .mondai-points { font-size: 0.8rem; color: #666; font-weight: normal; }
+    .question-block { margin-bottom: 15px; padding: 12px; background: white; border: 1px solid #e0e0e0; border-radius: 4px; }
+    .question-header { display: flex; align-items: center; gap: 10px; margin-bottom: 10px; }
+    .question-number { background: #333; color: white; padding: 2px 8px; border-radius: 3px; font-size: 0.7rem; }
+    .question-points { font-size: 0.7rem; color: #666; }
+    .question-text { font-size: 0.95rem; line-height: 1.5; margin-bottom: 12px; padding: 8px; background: #fafafa; border-left: 3px solid #333; }
+    .options-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 8px; margin: 10px 0; }
+    .option-label { display: flex; align-items: center; padding: 8px 10px; background: #fafafa; border: 1px solid #ddd; border-radius: 4px; cursor: pointer; font-size: 0.9rem; }
+    .option-label:hover { background: #f0f0f0; }
+    .option-label input[type="radio"] { margin-right: 8px; }
+    .option-label.correct-highlight { background: #e8f5e9; border-color: #2e7d32; }
+    .option-label.wrong-highlight { background: #ffebee; border-color: #c62828; }
+    
+    /* Reading Passage Style */
+    .reading-passage {
+      background: #f5f5f5;
+      border: 1px solid #ddd;
+      border-radius: 4px;
+      padding: 15px;
+      margin-bottom: 15px;
+      font-size: 0.95rem;
+      line-height: 1.8;
+    }
+    .reading-passage h4 {
+      color: #333;
+      margin-bottom: 10px;
+      font-size: 0.9rem;
+      border-bottom: 1px dashed #ccc;
+      padding-bottom: 5px;
+    }
+    .passage-image {
+      max-width: 100%;
+      height: auto;
+      margin: 10px 0;
+      border-radius: 4px;
+      border: 1px solid #ddd;
+    }
+    
+    .media-container { background: #f0f0f0; border: 1px solid #ccc; border-radius: 4px; padding: 15px; margin: 10px 0; }
+    .audio-player { width: 100%; margin-bottom: 10px; }
+    .audio-player audio { width: 100%; height: 40px; }
+    /* Listening Player */
+    .listening-player-container { background: #f5f5f5; border-radius: 8px; padding: 12px 15px; margin-bottom: 20px; border: 1px solid #ddd; }
+    .simple-audio-wrapper { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
+    .play-only-btn { background: #333; border: none; color: white; width: 48px; height: 48px; border-radius: 50%; cursor: pointer; font-size: 1.3rem; display: inline-flex; align-items: center; justify-content: center; transition: all 0.2s; }
+    .play-only-btn:hover { background: #555; }
+    .pause-btn, .seek-slider { display: none; }
+    .time-display { color: #333; font-family: monospace; font-size: 0.85rem; background: #e8e8e8; padding: 4px 10px; border-radius: 20px; }
+    .action-buttons { display: flex; gap: 8px; margin-top: 10px; flex-wrap: wrap; }
+    .action-btn { background: none; border: 1px solid #333; color: #333; padding: 4px 12px; border-radius: 3px; font-size: 0.8rem; cursor: pointer; display: inline-flex; align-items: center; gap: 4px; display: none; }
+    .action-btn.visible { display: inline-flex; }
+    .action-btn:hover { background: #333; color: white; }
+    .explanation-content { max-height: 0; overflow: hidden; transition: max-height 0.3s ease; margin-top: 10px; }
+    .explanation-content.expanded { max-height: 500px; }
+    .explanation-box { background: #f5f5f5; border: 1px solid #e0e0e0; border-radius: 4px; padding: 12px; font-size: 0.85rem; line-height: 1.6; }
+    /* Kotoba Note - different style from explanation */
+    .kotoba-content { max-height: 0; overflow: hidden; transition: max-height 0.3s ease; margin-top: 10px; }
+    .kotoba-content.expanded { max-height: 500px; }
+    .kotoba-box { background: #e8f0fe; border: 1px solid #1a73e8; border-radius: 4px; padding: 12px; font-size: 0.85rem; line-height: 1.6; }
+    .kotoba-box strong { color: #1a73e8; }
+    .loading { display: none; text-align: center; margin: 20px 0; }
+    .spinner { width: 30px; height: 30px; border: 2px solid #f0f0f0; border-top: 2px solid #333; border-radius: 50%; animation: spin 1s linear infinite; margin: 0 auto; }
+    @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+    .results-card { background: white; border: 2px solid #333; padding: 25px; margin: 20px 0; display: none; font-family: 'Times New Roman', serif; max-width: 600px; margin-left: auto; margin-right: auto; }
+    .results-header { text-align: center; margin-bottom: 20px; border-bottom: 2px solid #333; padding-bottom: 10px; }
+    .results-title { font-size: 1.4rem; font-weight: bold; letter-spacing: 2px; }
+    .results-date { font-size: 0.8rem; color: #666; margin-top: 5px; }
+    .candidate-section { display: flex; flex-direction: column; align-items: center; margin-bottom: 25px; border-bottom: 1px solid #ccc; padding-bottom: 15px; }
+    .result-photo { width: 100px; height: 100px; border-radius: 50%; border: 2px solid #333; object-fit: cover; margin-bottom: 10px; }
+    .candidate-details { text-align: center; width: 100%; }
+    .detail-row { display: flex; justify-content: center; gap: 30px; margin: 5px 0; font-size: 0.95rem; }
+    .detail-label { font-weight: 600; color: #333; }
+    .score-table { width: 100%; border-collapse: collapse; margin: 20px 0; font-size: 0.95rem; }
+    .score-table th { border-bottom: 2px solid #333; padding: 8px; text-align: left; }
+    .score-table td { padding: 10px 8px; border-bottom: 1px dotted #ccc; }
+    .score-table .total-row { font-weight: bold; border-top: 2px solid #333; }
+    .score-value { text-align: right; font-weight: 600; }
+    .judgment-box { text-align: center; padding: 15px; border: 2px solid #333; margin-top: 20px; }
+    .judgment-box.pass { background: #f1f8e9; border-color: #2e7d32; }
+    .judgment-box.fail { background: #ffebee; border-color: #c62828; }
+    .judgment-text { font-size: 1.5rem; font-weight: bold; }
+    .judgment-sub { font-size: 0.9rem; margin-top: 5px; }
+    .review-section { text-align: center; margin: 20px 0; }
+    .review-btn { background: #333; color: white; border: none; padding: 10px 30px; font-size: 1rem; cursor: pointer; border-radius: 4px; display: none; }
+    .review-btn.visible { display: inline-block; }
+    .review-btn:hover { background: #555; }
+    .footer { text-align: center; margin-top: 20px; padding: 15px; color: #666; font-size: 0.8rem; border-top: 1px solid #ddd; }
+    @media (max-width: 600px) { .options-grid { grid-template-columns: 1fr; } .detail-row { flex-direction: column; gap: 5px; } .score-table { font-size: 0.85rem; } }
+
+    /* REST BREAK OVERLAY */
+    .rest-overlay {
+      position: fixed;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: rgba(0,0,0,0.5);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 2000;
+    }
+    .rest-overlay.show { display: flex; }
+    .rest-box {
+      background: white;
+      border-radius: 12px;
+      padding: 40px 50px;
+      max-width: 450px;
+      width: 90%;
+      text-align: center;
+      box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+    }
+    .rest-box h2 {
+      font-size: 1.8rem;
+      color: #1a73e8;
+      margin-bottom: 10px;
+    }
+    .rest-box .rest-time {
+      font-size: 3rem;
+      font-weight: bold;
+      color: #333;
+      margin: 15px 0;
+    }
+    .rest-box .rest-label {
+      font-size: 1rem;
+      color: #666;
+      margin-bottom: 20px;
+      line-height: 1.6;
+    }
+    .rest-box .rest-btn {
+      background: #1a73e8;
+      color: white;
+      border: none;
+      padding: 12px 40px;
+      border-radius: 30px;
+      font-size: 1.1rem;
+      cursor: pointer;
+      font-weight: bold;
+    }
+    .rest-box .rest-btn:hover { background: #1557b0; }
+
+    /* BUILDER PANEL STYLES */
+    .builder-container { max-width: 1400px; margin: 20px auto; display: flex; gap: 20px; flex-wrap: wrap; }
+    .builder-editor { flex: 1.2; background: white; border-radius: 20px; padding: 20px; box-shadow: 0 4px 12px rgba(0,0,0,0.1); overflow-y: auto; max-height: 90vh; }
+    .builder-preview { flex: 0.9; background: #0e1a24; border-radius: 20px; padding: 20px; color: white; position: sticky; top: 20px; height: fit-content; }
+    .builder-preview h3 { color: #ffd966; margin-bottom: 12px; }
+    .code-preview { background: #102433; padding: 15px; border-radius: 12px; overflow-x: auto; white-space: pre-wrap; font-family: monospace; font-size: 0.65rem; max-height: 50vh; border: 1px solid #2d4b6e; }
+    .download-btn { background: #10b981; border: none; color: white; font-weight: bold; padding: 12px; border-radius: 40px; width: 100%; margin-top: 15px; cursor: pointer; }
+    .builder-stat { color: #b9d0f0; margin-top: 10px; text-align: center; font-size: 0.8rem; }
+    .section-card { background: #f8f9fa; border: 1px solid #ddd; border-radius: 16px; padding: 15px; margin-bottom: 20px; }
+    .section-title { display: flex; gap: 10px; align-items: center; margin-bottom: 15px; flex-wrap: wrap; }
+    .section-title input { flex: 1; font-size: 1.1rem; font-weight: bold; padding: 6px 12px; border: 1px solid #ccc; border-radius: 30px; }
+    .del-sec { background: #fee2e2; border: none; width: 36px; height: 36px; border-radius: 50%; cursor: pointer; font-size: 1.2rem; }
+    .mondai-editor { background: white; border-radius: 12px; padding: 12px; margin-bottom: 15px; border: 1px solid #e0e0e0; }
+    .mondai-header { display: flex; gap: 8px; align-items: center; margin-bottom: 10px; flex-wrap: wrap; }
+    .mondai-header input { flex: 2; padding: 5px 12px; border: 1px solid #ccc; border-radius: 20px; }
+    .mondai-header input[type="number"] { width: 80px; }
+    .question-editor { background: #fefefe; border: 1px solid #eee; border-radius: 10px; padding: 10px; margin-top: 10px; }
+    .btn-sm { background: #f0f0f0; border: 1px solid #aaa; border-radius: 20px; padding: 4px 12px; margin: 4px; cursor: pointer; font-size: 0.7rem; }
+    .btn-primary { background: #333; color: white; border: none; padding: 8px 16px; border-radius: 30px; cursor: pointer; margin-top: 8px; }
+    .flex-row { display: flex; gap: 8px; flex-wrap: wrap; align-items: center; }
+    .passage-editor { background: #f0f7ff; border: 1px solid #1a73e8; border-radius: 8px; padding: 10px; margin-bottom: 10px; }
+    .passage-editor textarea { width: 100%; padding: 8px; border: 1px solid #ccc; border-radius: 4px; font-size: 0.85rem; }
+  </style>
+</head>
+<body>
+<div class="modal-overlay" id="registerModal"><div class="modal-content"><div class="modal-title">JLPT N4 Registration</div><div class="photo-upload-container"><img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='100' height='100' viewBox='0 0 100 100'%3E%3Ccircle cx='50' cy='50' r='45' fill='%23e0e0e0'/%3E%3Ctext x='50' y='65' font-size='40' text-anchor='middle' fill='%23999'%3E📷%3C/text%3E%3C/svg%3E" class="photo-preview" id="photoPreview"><input type="file" id="photoInput" accept="image/*"><label for="photoInput" class="upload-btn">Choose Photo</label></div><div class="modal-form"><input type="text" class="modal-input" id="modalName" placeholder="Full Name" value="Shine Gyi"><input type="date" class="modal-input" id="modalDob" value="1995-05-15"><button class="modal-btn" id="startTestBtn">Start Test</button></div></div></div>
+<div class="sticky-header"><div class="header-left"><button class="back-btn" onclick="goBack()"><span>←</span> <span>Back</span></button></div><div class="timer-compact" id="sectionTimer"><span>⏱️</span><span id="timerDisplay">25:00</span></div></div>
+<div class="section-tabs"><button class="tab-btn active" id="section1Btn" onclick="switchToSection(1)">語彙</button><button class="tab-btn" id="section2Btn" onclick="switchToSection(2)" disabled>文法・読解</button><button class="tab-btn" id="section3Btn" onclick="switchToSection(3)" disabled>聴解</button></div>
+<div class="main-container"><div class="section-container active" id="section1"><div class="mondai-group"><div class="mondai-title"><span>問題1: 漢字の読み方</span><span class="mondai-points">1点 × 1問</span></div><div class="question-block" data-qid="1" data-points="1" data-correct="4" data-section="vocab">
+          <div class="question-header"><span class="question-number">1</span><span class="question-points">1点</span></div>
+          <div class="question-text">ここは省略してもかまわない。</div>
+          
+          <div class="options-grid"><label class="option-label"><input type="radio" name="q1" value="1" onchange="markAnswered(1)"> 1 しょうかく</label><label class="option-label"><input type="radio" name="q1" value="2" onchange="markAnswered(1)"> 2 しょうらく</label><label class="option-label"><input type="radio" name="q1" value="3" onchange="markAnswered(1)"> 3 しょうじゃく</label><label class="option-label"><input type="radio" name="q1" value="4" onchange="markAnswered(1)"> 4 しょうりゃく</label></div>
+          <div class="action-buttons">
+            <button class="action-btn explanation-btn" onclick="toggleExplanation(this)">📚 説明 (Explanation)</button>
+            <button class="action-btn kotoba-btn" onclick="toggleKotoba(this)">📝 言葉ノート (Kotoba Note)</button>
+          </div>
+          <div class="explanation-content"><div class="explanation-box"><strong>正解: 4 しょうりゃく (省略)</strong><br><strong>意味:</strong> "ဒီနေရာမှာ ချန်လှပ်ထားလည်း အဆင်ပြေတယ်"<br><strong>解説:</strong> 1.しょうかく(昇格)ရာထူးတိုး / 2.しょうらく(使用しない) / 3.しょうじゃく(小弱)အားနည်း / 4.しょうりゃく(省略)ချန်လှပ်</div></div>
+          <div class="kotoba-content"><div class="kotoba-box"><strong>📖 言葉ノート (ဂျပန်→မြန်မာ)</strong><br>• 省略 (しょうりゃく) - ချန်လှပ်ခြင်း<br>• かまわない - အဆင်ပြေတယ် / ကိစ္စမရှိဘူး<br>• ここ - ဒီနေရာ</div></div>
+        </div></div><div class="mondai-group"><div class="mondai-title"><span>問題2: 言葉の意味</span><span class="mondai-points">1点 × 1問</span></div><div class="question-block" data-qid="2" data-points="1" data-correct="1" data-section="vocab">
+          <div class="question-header"><span class="question-number">1</span><span class="question-points">1点</span></div>
+          <div class="question-text">研修内容は、日程も含めて、今日中にお知らせします。</div>
+          
+          <div class="options-grid"><label class="option-label"><input type="radio" name="q2" value="1" onchange="markAnswered(2)"> 1 ふくめて</label><label class="option-label"><input type="radio" name="q2" value="2" onchange="markAnswered(2)"> 2 さだめて</label><label class="option-label"><input type="radio" name="q2" value="3" onchange="markAnswered(2)"> 3 かためて</label><label class="option-label"><input type="radio" name="q2" value="4" onchange="markAnswered(2)"> 4 まとめて</label></div>
+          <div class="action-buttons">
+            <button class="action-btn explanation-btn" onclick="toggleExplanation(this)">📚 説明 (Explanation)</button>
+            <button class="action-btn kotoba-btn" onclick="toggleKotoba(this)">📝 言葉ノート (Kotoba Note)</button>
+          </div>
+          <div class="explanation-content"><div class="explanation-box"><strong>正解: 1 ふくめて (含めて)</strong><br><strong>意味:</strong> "သင်တန်းအကြောင်းအရာအပါအဝင် အချိန်ဇယားကိုပါ ဒီနေ့အတွင်း အသိပေးပါမယ်"</div></div>
+          <div class="kotoba-content"><div class="kotoba-box"><strong>📖 言葉ノート (ဂျပန်→မြန်မာ)</strong><br>• 研修 (けんしゅう) - သင်တန်း<br>• 内容 (ないよう) - အကြောင်းအရာ<br>• 日程 (にってい) - အချိန်ဇယား<br>• 含めて (ふくめて) - အပါအဝင်<br>• お知らせします - အသိပေးပါမည်</div></div>
+        </div></div><div class="mondai-group"><div class="mondai-title"><span>問題3: 文脈に合う言葉</span><span class="mondai-points">1点 × 1問</span></div><div class="question-block" data-qid="3" data-points="1" data-correct="2" data-section="vocab">
+          <div class="question-header"><span class="question-number">1</span><span class="question-points">1点</span></div>
+          <div class="question-text">この機械の操作は（ ）難しい。</div>
+          
+          <div class="options-grid"><label class="option-label"><input type="radio" name="q3" value="1" onchange="markAnswered(3)"> 1 わりに</label><label class="option-label"><input type="radio" name="q3" value="2" onchange="markAnswered(3)"> 2 かなり</label><label class="option-label"><input type="radio" name="q3" value="3" onchange="markAnswered(3)"> 3 めったに</label><label class="option-label"><input type="radio" name="q3" value="4" onchange="markAnswered(3)"> 4 たまに</label></div>
+          <div class="action-buttons">
+            <button class="action-btn explanation-btn" onclick="toggleExplanation(this)">📚 説明 (Explanation)</button>
+            <button class="action-btn kotoba-btn" onclick="toggleKotoba(this)">📝 言葉ノート (Kotoba Note)</button>
+          </div>
+          <div class="explanation-content"><div class="explanation-box"><strong>正解: 2 かなり</strong><br><strong>意味:</strong> "ဒီစက်ရဲ့ လုပ်ဆောင်ချက်က အတော်လေး ခက်ခဲတယ်"</div></div>
+          <div class="kotoba-content"><div class="kotoba-box"><strong>📖 言葉ノート (ဂျပန်→မြန်မာ)</strong><br>• 機械 (きかい) - စက်<br>• 操作 (そうさ) - လုပ်ဆောင်ချက် / ထိန်းချုပ်မှု<br>• 難しい (むずかしい) - ခက်ခဲသော<br>• かなり - အတော်လေး</div></div>
+        </div></div><div class="mondai-group"><div class="mondai-title"><span>問題4: 同じ意味の言葉</span><span class="mondai-points">2点 × 1問</span></div><div class="question-block" data-qid="4" data-points="2" data-correct="3" data-section="vocab">
+          <div class="question-header"><span class="question-number">1</span><span class="question-points">2点</span></div>
+          <div class="question-text">新しい___を始めたいです。</div>
+          
+          <div class="options-grid"><label class="option-label"><input type="radio" name="q4" value="1" onchange="markAnswered(4)"> 1 しゅみ</label><label class="option-label"><input type="radio" name="q4" value="2" onchange="markAnswered(4)"> 2 しゅうみ</label><label class="option-label"><input type="radio" name="q4" value="3" onchange="markAnswered(4)"> 3 しゅみ</label><label class="option-label"><input type="radio" name="q4" value="4" onchange="markAnswered(4)"> 4 しゅうみ</label></div>
+          <div class="action-buttons">
+            <button class="action-btn explanation-btn" onclick="toggleExplanation(this)">📚 説明 (Explanation)</button>
+            <button class="action-btn kotoba-btn" onclick="toggleKotoba(this)">📝 言葉ノート (Kotoba Note)</button>
+          </div>
+          <div class="explanation-content"><div class="explanation-box"><strong>正解: 3 しゅみ (趣味)</strong><br><strong>意味:</strong> "ဝါသနာအသစ်တစ်ခု စတင်ချင်တယ်"</div></div>
+          <div class="kotoba-content"><div class="kotoba-box"><strong>📖 言葉ノート (ဂျပန်→မြန်မာ)</strong><br>• 新しい (あたらしい) - အသစ်<br>• 趣味 (しゅみ) - ဝါသနာ<br>• 始めたい (はじめたい) - စတင်ချင်သည်</div></div>
+        </div></div><div class="mondai-group"><div class="mondai-title"><span>問題5: 言葉の使い方</span><span class="mondai-points">2点 × 1問</span></div><div class="question-block" data-qid="5" data-points="2" data-correct="1" data-section="vocab">
+          <div class="question-header"><span class="question-number">1</span><span class="question-points">2点</span></div>
+          <div class="question-text">佐藤さんはおそらく来ないと思う。</div>
+          
+          <div class="options-grid"><label class="option-label"><input type="radio" name="q5" value="1" onchange="markAnswered(5)"> 1 たぶん</label><label class="option-label"><input type="radio" name="q5" value="2" onchange="markAnswered(5)"> 2 たしか</label><label class="option-label"><input type="radio" name="q5" value="3" onchange="markAnswered(5)"> 3 やはり</label><label class="option-label"><input type="radio" name="q5" value="4" onchange="markAnswered(5)"> 4 ぜったい</label></div>
+          <div class="action-buttons">
+            <button class="action-btn explanation-btn" onclick="toggleExplanation(this)">📚 説明 (Explanation)</button>
+            <button class="action-btn kotoba-btn" onclick="toggleKotoba(this)">📝 言葉ノート (Kotoba Note)</button>
+          </div>
+          <div class="explanation-content"><div class="explanation-box"><strong>正解: 1 たぶん</strong><br><strong>意味:</strong> "ဆာတိုးဆန် ဖြစ်နိုင်တယ် မလာဘူး ထင်တယ်"</div></div>
+          <div class="kotoba-content"><div class="kotoba-box"><strong>📖 言葉ノート (ဂျပန်→မြန်မာ)</strong><br>• 佐藤さん (さとうさん) - ဆာတိုးဆန်<br>• おそらく - ဖြစ်နိုင်သည်<br>• 来ない (こない) - မလာ<br>• たぶん - ဖြစ်နိုင်တယ်</div></div>
+        </div></div><div class="section-footer"><button class="section-end-btn" onclick="endSection(1)">End Section</button></div></div><div class="section-container" id="section2"><div class="mondai-group"><div class="mondai-title"><span>読解問題</span><span class="mondai-points">1点 × 2問</span></div><div class="reading-passage"><h4>📖 読解文</h4><p>日本の会社では、朝の挨拶が大切です。「おはようございます」と元気に言いましょう。また、帰る時は「お先に失礼します」と言ってから帰ります。これらの挨拶は、職場の人間関係を良くするためにとても重要です。</p></div><div class="question-block" data-qid="6" data-points="1" data-correct="2" data-section="grammar">
+          <div class="question-header"><span class="question-number">1</span><span class="question-points">1点</span></div>
+          <div class="question-text">日本の会社で朝の挨拶はどうですか。</div>
+          
+          <div class="options-grid"><label class="option-label"><input type="radio" name="q6" value="1" onchange="markAnswered(6)"> 1 必要ない</label><label class="option-label"><input type="radio" name="q6" value="2" onchange="markAnswered(6)"> 2 大切</label><label class="option-label"><input type="radio" name="q6" value="3" onchange="markAnswered(6)"> 3 夜の挨拶が大切</label><label class="option-label"><input type="radio" name="q6" value="4" onchange="markAnswered(6)"> 4 挨拶しなくていい</label></div>
+          <div class="action-buttons">
+            <button class="action-btn explanation-btn" onclick="toggleExplanation(this)">📚 説明 (Explanation)</button>
+            <button class="action-btn kotoba-btn" onclick="toggleKotoba(this)">📝 言葉ノート (Kotoba Note)</button>
+          </div>
+          <div class="explanation-content"><div class="explanation-box"><strong>正解: 2</strong><br>「朝の挨拶が大切です」と書いてあります。</div></div>
+          <div class="kotoba-content"><div class="kotoba-box"><strong>📖 言葉ノート</strong><br>• 会社 (かいしゃ) - ကုမ္ပဏီ<br>• 挨拶 (あいさつ) - နှုတ်ဆက်ခြင်း<br>• 大切 (たいせつ) - အရေးကြီးသော</div></div>
+        </div><div class="question-block" data-qid="7" data-points="1" data-correct="3" data-section="grammar">
+          <div class="question-header"><span class="question-number">2</span><span class="question-points">1点</span></div>
+          <div class="question-text">帰る時は何と言いますか。</div>
+          
+          <div class="options-grid"><label class="option-label"><input type="radio" name="q7" value="1" onchange="markAnswered(7)"> 1 おはようございます</label><label class="option-label"><input type="radio" name="q7" value="2" onchange="markAnswered(7)"> 2 こんにちは</label><label class="option-label"><input type="radio" name="q7" value="3" onchange="markAnswered(7)"> 3 お先に失礼します</label><label class="option-label"><input type="radio" name="q7" value="4" onchange="markAnswered(7)"> 4 ありがとう</label></div>
+          <div class="action-buttons">
+            <button class="action-btn explanation-btn" onclick="toggleExplanation(this)">📚 説明 (Explanation)</button>
+            <button class="action-btn kotoba-btn" onclick="toggleKotoba(this)">📝 言葉ノート (Kotoba Note)</button>
+          </div>
+          <div class="explanation-content"><div class="explanation-box"><strong>正解: 3</strong><br>「帰る時は「お先に失礼します」と言ってから帰ります」と書いてあります。</div></div>
+          <div class="kotoba-content"><div class="kotoba-box"><strong>📖 言葉ノート</strong><br>• 帰る (かえる) - ပြန်သည်<br>• お先に失礼します (おさきにしつれいします) - ကျွန်တော်အရင်ပြန်ပါတယ်</div></div>
+        </div></div><div class="mondai-group"><div class="mondai-title"><span>読解問題2</span><span class="mondai-points">1点 × 2問</span></div><div class="reading-passage"><h4>📖 読解文</h4><p>日本では、季節の変わり目に「時候の挨拶」というものを手紙に書きます。春なら「桜の花が咲き始めました」、夏なら「暑さが厳しくなりました」など、その季節に合った言葉を選びます。これは、相手への気遣いを表す大切な習慣です。</p></div><div class="question-block" data-qid="8" data-points="1" data-correct="1" data-section="grammar">
+          <div class="question-header"><span class="question-number">1</span><span class="question-points">1点</span></div>
+          <div class="question-text">「時候の挨拶」とは何ですか。</div>
+          
+          <div class="options-grid"><label class="option-label"><input type="radio" name="q8" value="1" onchange="markAnswered(8)"> 1 季節の言葉</label><label class="option-label"><input type="radio" name="q8" value="2" onchange="markAnswered(8)"> 2 いつも同じ挨拶</label><label class="option-label"><input type="radio" name="q8" value="3" onchange="markAnswered(8)"> 3 目上の人だけに書くもの</label><label class="option-label"><input type="radio" name="q8" value="4" onchange="markAnswered(8)"> 4 必要ないもの</label></div>
+          <div class="action-buttons">
+            <button class="action-btn explanation-btn" onclick="toggleExplanation(this)">📚 説明 (Explanation)</button>
+            <button class="action-btn kotoba-btn" onclick="toggleKotoba(this)">📝 言葉ノート (Kotoba Note)</button>
+          </div>
+          <div class="explanation-content"><div class="explanation-box"><strong>正解: 1</strong><br>「時候の挨拶」は季節に合った言葉を選ぶものです。</div></div>
+          <div class="kotoba-content"><div class="kotoba-box"><strong>📖 言葉ノート</strong><br>• 季節 (きせつ) - ရာသီ<br>• 時候の挨拶 (じこうのあいさつ) - ရာသီအလိုက်နှုတ်ဆက်စကား<br>• 手紙 (てがみ) - စာ</div></div>
+        </div><div class="question-block" data-qid="9" data-points="1" data-correct="1" data-section="grammar">
+          <div class="question-header"><span class="question-number">2</span><span class="question-points">1点</span></div>
+          <div class="question-text">時候の挨拶は何のために書きますか。</div>
+          
+          <div class="options-grid"><label class="option-label"><input type="radio" name="q9" value="1" onchange="markAnswered(9)"> 1 相手への気遣い</label><label class="option-label"><input type="radio" name="q9" value="2" onchange="markAnswered(9)"> 2 自分の趣味</label><label class="option-label"><input type="radio" name="q9" value="3" onchange="markAnswered(9)"> 3 仕事のため</label><label class="option-label"><input type="radio" name="q9" value="4" onchange="markAnswered(9)"> 4 時間をつぶすため</label></div>
+          <div class="action-buttons">
+            <button class="action-btn explanation-btn" onclick="toggleExplanation(this)">📚 説明 (Explanation)</button>
+            <button class="action-btn kotoba-btn" onclick="toggleKotoba(this)">📝 言葉ノート (Kotoba Note)</button>
+          </div>
+          <div class="explanation-content"><div class="explanation-box"><strong>正解: 1</strong><br>「相手への気遣いを表す大切な習慣です」と書いてあります。</div></div>
+          <div class="kotoba-content"><div class="kotoba-box"><strong>📖 言葉ノート</strong><br>• 気遣い (きづかい) - စေတနာ၊ ဂရုစိုက်မှု<br>• 習慣 (しゅうかん) - အလေ့အထ</div></div>
+        </div></div><div class="section-footer"><button class="section-end-btn" onclick="endSection(2)">End Section</button></div></div><div class="section-container" id="section3">
+      <div class="listening-player-container" id="listeningPlayerBox">
+        <div class="simple-audio-wrapper" id="audioWrapper">
+          <button class="play-only-btn" id="playOnlyBtn">▶</button>
+          <button class="pause-btn" id="pauseBtn" style="display:none;">⏸</button>
+          <input type="range" class="seek-slider" id="seekSlider" value="0" step="1" style="display:none; flex:1;">
+          <span class="time-display" id="timeDisplay">0:00 / 0:00</span>
+        </div>
+        <audio id="listeningMainAudio" src="https://www2.cs.uic.edu/~i101/SoundFiles/taunt.wav" preload="auto"></audio>
+      </div>
+    <div class="mondai-group"><div class="mondai-title"><span>聴解問題</span><span class="mondai-points"></span></div><div class="question-block" data-qid="10" data-points="1" data-correct="2" data-section="listening">
+          <div class="question-header"><span class="question-number">1</span><span class="question-points">1点</span></div>
+          <div class="question-text">男の人は何をしなければなりませんか。</div>
+          <img src="image3473.jpg" class="passage-image" alt="Question Image" style="max-width:100%; margin:10px 0;">
+          <div class="options-grid"><label class="option-label"><input type="radio" name="q10" value="1" onchange="markAnswered(10)"> 1 レポートを書く</label><label class="option-label"><input type="radio" name="q10" value="2" onchange="markAnswered(10)"> 2 資料をコピーする</label><label class="option-label"><input type="radio" name="q10" value="3" onchange="markAnswered(10)"> 3 会議に出席する</label><label class="option-label"><input type="radio" name="q10" value="4" onchange="markAnswered(10)"> 4 メールを送る</label></div>
+          <div class="action-buttons">
+            <button class="action-btn explanation-btn" onclick="toggleExplanation(this)">📚 説明 (Explanation)</button>
+            <button class="action-btn kotoba-btn" onclick="toggleKotoba(this)">📝 言葉ノート (Kotoba Note)</button>
+          </div>
+          <div class="explanation-content"><div class="explanation-box"><strong>正解: 2</strong><br>"資料をコピーしておいてください" လို့ ပြောထားတာကြောင့် အဖြေမှန်က 2 ဖြစ်ပါတယ်။</div></div>
+          <div class="kotoba-content"><div class="kotoba-box"><strong>📖 言葉ノート (ဂျပန်→မြန်မာ)</strong><br>• 男の人 (おとこのひと) - အမျိုးသား<br>• レポート - အစီရင်ခံစာ<br>• 資料 (しりょう) - စာရွက်စာတမ်း<br>• コピーする - ကူးယူသည်<br>• 会議 (かいぎ) - အစည်းအဝေး</div></div>
+        </div><div class="question-block" data-qid="11" data-points="1" data-correct="1" data-section="listening">
+          <div class="question-header"><span class="question-number">2</span><span class="question-points">1点</span></div>
+          <div class="question-text">二人はどこで会いますか。</div>
+          <img src="https://via.placeholder.com/300x200/cccccc/666666?text=Image+2" class="passage-image" alt="Question Image" style="max-width:100%; margin:10px 0;">
+          <div class="options-grid"><label class="option-label"><input type="radio" name="q11" value="1" onchange="markAnswered(11)"> 1 映画館</label><label class="option-label"><input type="radio" name="q11" value="2" onchange="markAnswered(11)"> 2 レストラン</label><label class="option-label"><input type="radio" name="q11" value="3" onchange="markAnswered(11)"> 3 図書館</label><label class="option-label"><input type="radio" name="q11" value="4" onchange="markAnswered(11)"> 4 公園</label></div>
+          <div class="action-buttons">
+            <button class="action-btn explanation-btn" onclick="toggleExplanation(this)">📚 説明 (Explanation)</button>
+            <button class="action-btn kotoba-btn" onclick="toggleKotoba(this)">📝 言葉ノート (Kotoba Note)</button>
+          </div>
+          <div class="explanation-content"><div class="explanation-box"><strong>正解: 1</strong><br>"映画館の前で待ち合わせましょう" လို့ ပြောထားတာကြောင့် အဖြေမှန်က 1 ဖြစ်ပါတယ်။</div></div>
+          <div class="kotoba-content"><div class="kotoba-box"><strong>📖 言葉ノート (ဂျပန်→မြန်မာ)</strong><br>• 二人 (ふたり) - လူနှစ်ယောက်<br>• 会う (あう) - တွေ့သည်<br>• 映画館 (えいがかん) - ရုပ်ရှင်ရုံ<br>• 待ち合わせる (まちあわせる) - စောင့်ဆိုင်ရန် ချိန်းသည်</div></div>
+        </div><div class="question-block" data-qid="12" data-points="1" data-correct="3" data-section="listening">
+          <div class="question-header"><span class="question-number">3</span><span class="question-points">1点</span></div>
+          <div class="question-text">会議はどうなりましたか。</div>
+          <img src="https://via.placeholder.com/300x200/cccccc/666666?text=Image+3" class="passage-image" alt="Question Image" style="max-width:100%; margin:10px 0;">
+          <div class="options-grid"><label class="option-label"><input type="radio" name="q12" value="1" onchange="markAnswered(12)"> 1 電車が遅れている</label><label class="option-label"><input type="radio" name="q12" value="2" onchange="markAnswered(12)"> 2 バスが来ない</label><label class="option-label"><input type="radio" name="q12" value="3" onchange="markAnswered(12)"> 3 会議が中止</label><label class="option-label"><input type="radio" name="q12" value="4" onchange="markAnswered(12)"> 4 台風が来る</label></div>
+          <div class="action-buttons">
+            <button class="action-btn explanation-btn" onclick="toggleExplanation(this)">📚 説明 (Explanation)</button>
+            <button class="action-btn kotoba-btn" onclick="toggleKotoba(this)">📝 言葉ノート (Kotoba Note)</button>
+          </div>
+          <div class="explanation-content"><div class="explanation-box"><strong>正解: 3</strong><br>"台風のため会議は中止になりました" လို့ ပြောထားတာကြောင့် အဖြေမှန်က 3 ဖြစ်ပါတယ်။</div></div>
+          <div class="kotoba-content"><div class="kotoba-box"><strong>📖 言葉ノート (ဂျပန်→မြန်မာ)</strong><br>• 会議 (かいぎ) - အစည်းအဝေး<br>• 中止 (ちゅうし) - ဖျက်သိမ်းခြင်း<br>• 台風 (たいふう) - မုန်တိုင်း<br>• ため - သောကြောင့်</div></div>
+        </div><div class="question-block" data-qid="13" data-points="1" data-correct="4" data-section="listening">
+          <div class="question-header"><span class="question-number">4</span><span class="question-points">1点</span></div>
+          <div class="question-text">食事の前に何と言いますか。</div>
+          <img src="https://via.placeholder.com/300x200/cccccc/666666?text=Image+4" class="passage-image" alt="Question Image" style="max-width:100%; margin:10px 0;">
+          <div class="options-grid"><label class="option-label"><input type="radio" name="q13" value="1" onchange="markAnswered(13)"> 1 ありがとう</label><label class="option-label"><input type="radio" name="q13" value="2" onchange="markAnswered(13)"> 2 ごめんなさい</label><label class="option-label"><input type="radio" name="q13" value="3" onchange="markAnswered(13)"> 3 おめでとう</label><label class="option-label"><input type="radio" name="q13" value="4" onchange="markAnswered(13)"> 4 いただきます</label></div>
+          <div class="action-buttons">
+            <button class="action-btn explanation-btn" onclick="toggleExplanation(this)">📚 説明 (Explanation)</button>
+            <button class="action-btn kotoba-btn" onclick="toggleKotoba(this)">📝 言葉ノート (Kotoba Note)</button>
+          </div>
+          <div class="explanation-content"><div class="explanation-box"><strong>正解: 4</strong><br>"いただきます" သည် ထမင်းစားခါနီး ပြောသော စကားဖြစ်ပါတယ်။</div></div>
+          <div class="kotoba-content"><div class="kotoba-box"><strong>📖 言葉ノート (ဂျပန်→မြန်မာ)</strong><br>• 食事 (しょくじ) - ထမင်းစားခြင်း<br>• 前 (まえ) - အရင်<br>• いただきます - ထမင်းစားတော့မယ် (ရိုသေစကား)<br>• ありがとう - ကျေးဇူးတင်ပါတယ်</div></div>
+        </div></div><div class="section-footer"><button class="section-end-btn" onclick="endSection(3)">End Section</button></div></div><div class="loading"><div class="spinner"></div></div><div class="results-card" id="resultsCard"><div class="results-header"><div class="results-title">JLPT N4 SCORE REPORT</div><div class="results-date" id="reportDate"></div></div><div class="candidate-section"><img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='100' height='100' viewBox='0 0 100 100'%3E%3Ccircle cx='50' cy='50' r='45' fill='%23e0e0e0'/%3E%3Ctext x='50' y='65' font-size='40' text-anchor='middle' fill='%23999'%3E📷%3C/text%3E%3C/svg%3E" class="result-photo" id="resultPhoto"><div class="candidate-details"><div class="detail-row"><span class="detail-label">Name:</span><span id="reportName">Shine Gyi</span></div><div class="detail-row"><span class="detail-label">Birth:</span><span id="reportDob">15/05/1995</span></div><div class="detail-row"><span class="detail-label">ID:</span><span id="reportId">N4-2024001</span></div></div></div><table class="score-table"><thead><tr><th>Section</th><th>Score</th><th>Status</th></tr></thead><tbody><tr><td><strong>言語知識 (語彙・文法・読解)</strong></td><td class="score-value" id="languageScore">0/120</td><td id="languageStatus">-</td></tr><tr><td>聴解</td><td class="score-value" id="listeningScore">0/60</td><td id="listeningStatus">-</td></tr><tr class="total-row"><td><strong>総合得点</strong></td><td class="score-value" id="totalScore">0/180</td><td id="totalStatus">-</td></tr></tbody></table><div class="judgment-box" id="judgmentBox"><div class="judgment-text" id="judgmentText">-</div><div class="judgment-sub" id="judgmentSub"></div></div></div><div class="review-section"><button class="review-btn" id="reviewBtn" onclick="reviewAnswers()">Review Answers</button></div><div class="footer"><p>JLPT N4 • 📚 説明 = အဖြေရှင်းလင်းချက် • 📝 言葉ノート = ဂျပန်စာလုံးများ၏ မြန်မာအဓိပ္ပါယ်</p></div></div>
+
+<!-- REST BREAK OVERLAY -->
+<div class="rest-overlay" id="restOverlay">
+  <div class="rest-box">
+    <h2>☕ 30 Minutes Rest</h2>
+    <div class="rest-time">30:00</div>
+    <div class="rest-label">Please take a rest. Press Start to continue.</div>
+    <button class="rest-btn" id="restStartBtn">▶ Start Next Section</button>
+  </div>
+</div>
+
+<script>
+let currentSection=1, timers=[null,null,null], timeLeft=[1500,3300,2100], sectionsCompleted=[false,false,false];
+let userAnswers = {1:{},2:{},3:{}};
+let maxRawLang = 0, maxRawListening = 0;
+let hasPlayedListening = false;
+let isReviewMode = false;
+let audioEl = null;
+let restPendingSection = null;
+
+document.getElementById('photoInput').addEventListener('change',function(e){let f=e.target.files[0];if(f){let r=new FileReader();r.onload=function(ev){document.getElementById('photoPreview').src=ev.target.result;sessionStorage.setItem('candidatePhoto',ev.target.result);};r.readAsDataURL(f);}});
+function goBack(){if(confirm('Go back to homepage?')) window.location.href='index.html';}
+
+function initListeningPlayer() {
+  audioEl = document.getElementById('listeningMainAudio');
+  if(!audioEl) return;
+  let playBtn = document.getElementById('playOnlyBtn');
+  let pauseBtn = document.getElementById('pauseBtn');
+  let seekSlider = document.getElementById('seekSlider');
+  let timeDisplay = document.getElementById('timeDisplay');
+  
+  function formatTime(secs) { let m = Math.floor(secs/60); let s = Math.floor(secs%60); return m+":"+(s<10?"0"+s:s); }
+  
+  audioEl.addEventListener('loadedmetadata', ()=>{
+    seekSlider.max = audioEl.duration;
+    timeDisplay.innerText = formatTime(0) + " / " + formatTime(audioEl.duration);
+  });
+  audioEl.addEventListener('timeupdate', ()=>{
+    if(seekSlider) seekSlider.value = audioEl.currentTime;
+    timeDisplay.innerText = formatTime(audioEl.currentTime) + " / " + formatTime(audioEl.duration);
+  });
+  
+  playBtn.onclick = () => {
+    if(!isReviewMode && hasPlayedListening) {
+      alert("စာဖြေချိန်အတွင်း တစ်ကြိမ်သာ နားထောင်ခွင့်ရှိပါသည်။ Review Answers နှိပ်ပြီးမှ ပြန်နားထောင်နိုင်ပါသည်။");
+      return;
+    }
+    if(audioEl) {
+      audioEl.play();
+      if(!isReviewMode) hasPlayedListening = true;
+    }
+  };
+  
+  if(pauseBtn) {
+    pauseBtn.onclick = () => { if(isReviewMode && audioEl) audioEl.pause(); };
+  }
+  if(seekSlider) {
+    seekSlider.oninput = () => { if(isReviewMode && audioEl) audioEl.currentTime = seekSlider.value; };
+  }
+}
+
+document.getElementById('startTestBtn').addEventListener('click',function(){
+  let n=document.getElementById('modalName').value.trim();
+  let d=document.getElementById('modalDob').value;
+  if(!n||!d){alert('Please fill in all fields');return;}
+  sessionStorage.setItem('candidateName',n);
+  sessionStorage.setItem('candidateDob',d.split('-').reverse().join('/'));
+  document.getElementById('registerModal').style.display='none';
+  initMaxScores();
+  startTimer(1);
+  setTimeout(()=>{ if(document.getElementById('listeningMainAudio')) initListeningPlayer(); }, 100);
+});
+
+function initMaxScores(){
+  maxRawLang=0; maxRawListening=0;
+  document.querySelectorAll('#section1 .question-block, #section2 .question-block').forEach(b=>maxRawLang+=parseFloat(b.dataset.points));
+  document.querySelectorAll('#section3 .question-block').forEach(b=>maxRawListening+=parseFloat(b.dataset.points));
+}
+function startTimer(s){
+  if(timers[s-1])clearInterval(timers[s-1]);
+  timers[s-1]=setInterval(()=>{
+    if(timeLeft[s-1]<=0){ clearInterval(timers[s-1]); alert('Section '+s+' time up'); endSection(s); return; }
+    timeLeft[s-1]--;
+    if(s===currentSection)updateTimerDisplay(s);
+  },1000);
+}
+function updateTimerDisplay(s){ let m=Math.floor(timeLeft[s-1]/60),sec=timeLeft[s-1]%60; document.getElementById('timerDisplay').innerText=m.toString().padStart(2,'0')+':'+sec.toString().padStart(2,'0'); if(timeLeft[s-1]<=300)document.getElementById('sectionTimer').classList.add('warning'); }
+function switchToSection(s){
+  if(s>currentSection&&!sectionsCompleted[s-2]){ alert('Please complete previous section first'); return; }
+  document.querySelectorAll('.section-container').forEach(el=>el.classList.remove('active'));
+  document.getElementById('section'+s).classList.add('active');
+  document.querySelectorAll('.tab-btn').forEach(btn=>btn.classList.remove('active'));
+  document.getElementById('section'+s+'Btn').classList.add('active');
+  currentSection=s;
+  updateTimerDisplay(s);
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+function endSection(s){
+  if(sectionsCompleted[s-1])return;
+  clearInterval(timers[s-1]);
+  sectionsCompleted[s-1]=true;
+  let btn=document.getElementById('section'+s+'Btn');
+  btn.classList.add('completed'); btn.disabled=true;
+  if(s<3){ 
+    restPendingSection = s+1;
+    document.getElementById('restOverlay').classList.add('show');
+    let restTime = 30 * 60;
+    let restInterval = setInterval(() => {
+      let m = Math.floor(restTime / 60);
+      let sec = restTime % 60;
+      document.querySelector('.rest-time').innerText = m.toString().padStart(2,'0') + ':' + sec.toString().padStart(2,'0');
+      restTime--;
+      if(restTime < 0) { clearInterval(restInterval); document.querySelector('.rest-time').innerText = '00:00'; }
+    }, 1000);
+  }
+  if(sectionsCompleted.every(v=>v===true)) calculateResults();
+}
+
+document.getElementById('restStartBtn').addEventListener('click', function() {
+  document.getElementById('restOverlay').classList.remove('show');
+  if(restPendingSection) {
+    document.getElementById('section'+restPendingSection+'Btn').disabled = false;
+    startTimer(restPendingSection);
+    switchToSection(restPendingSection);
+    restPendingSection = null;
+  }
+});
+
+function toggleExplanation(btn){ let c=btn.closest('.question-block').querySelector('.explanation-content'); c.classList.toggle('expanded'); btn.innerHTML=c.classList.contains('expanded')?'📚 閉じる':'📚 説明 (Explanation)'; }
+function toggleKotoba(btn){ let c=btn.closest('.question-block').querySelector('.kotoba-content'); c.classList.toggle('expanded'); btn.innerHTML=c.classList.contains('expanded')?'📝 閉じる':'📝 言葉ノート (Kotoba Note)'; }
+function markAnswered(qid){ let section=currentSection; let val=document.querySelector('input[name="q'+qid+'"]:checked'); if(val)userAnswers[section][qid]=val.value; }
+function calculateResults(){
+  document.querySelector('.loading').style.display='block';
+  setTimeout(()=>{
+    let rawLang=0,rawListening=0;
+    document.querySelectorAll('#section1 .question-block, #section2 .question-block').forEach(b=>{
+      let qid=parseInt(b.dataset.qid); let correct=b.dataset.correct; let selected=null;
+      if(qid<=5)selected=userAnswers[1][qid]; else selected=userAnswers[2][qid];
+      if(selected&&selected===correct)rawLang+=parseFloat(b.dataset.points);
+    });
+    document.querySelectorAll('#section3 .question-block').forEach(b=>{
+      let qid=parseInt(b.dataset.qid); let correct=b.dataset.correct; let selected=userAnswers[3][qid];
+      if(selected&&selected===correct)rawListening+=parseFloat(b.dataset.points);
+    });
+    let scaledLang=Math.round((rawLang/maxRawLang)*120)||0;
+    let scaledListening=Math.round((rawListening/maxRawListening)*60)||0;
+    let total=scaledLang+scaledListening;
+    let passLang=scaledLang>=38, passListen=scaledListening>=19, passTotal=total>=90;
+    let overall=passLang&&passListen&&passTotal;
+    let photo=sessionStorage.getItem('candidatePhoto'); if(photo)document.getElementById('resultPhoto').src=photo;
+    document.getElementById('reportName').innerText=sessionStorage.getItem('candidateName')||'Shine Gyi';
+    document.getElementById('reportDob').innerText=sessionStorage.getItem('candidateDob')||'15/05/1995';
+    document.getElementById('reportId').innerText='N4-'+Math.floor(Math.random()*10000);
+    document.getElementById('reportDate').innerText=new Date().toLocaleDateString();
+    document.getElementById('languageScore').innerText=scaledLang+'/120';
+    document.getElementById('languageStatus').innerText=passLang?'PASS':'FAIL';
+    document.getElementById('listeningScore').innerText=scaledListening+'/60';
+    document.getElementById('listeningStatus').innerText=passListen?'PASS':'FAIL';
+    document.getElementById('totalScore').innerText=total+'/180';
+    document.getElementById('totalStatus').innerText=passTotal?'PASS':'FAIL';
+    let jb=document.getElementById('judgmentBox');
+    if(overall){ jb.className='judgment-box pass'; document.getElementById('judgmentText').innerText='PASSED'; document.getElementById('judgmentSub').innerText='合格おめでとうございます！'; }
+    else{ jb.className='judgment-box fail'; document.getElementById('judgmentText').innerText='FAILED'; let r=[]; if(!passLang)r.push('言語知識 (38点未満)'); if(!passListen)r.push('聴解 (19点未満)'); if(!passTotal)r.push('総合得点 (90点未満)'); document.getElementById('judgmentSub').innerText='不合格: '+r.join(', '); }
+    document.getElementById('resultsCard').style.display='block';
+    document.querySelector('.review-btn').classList.add('visible');
+    document.querySelectorAll('.action-btn').forEach(btn=>btn.classList.add('visible'));
+    document.querySelector('.loading').style.display='none';
+    document.getElementById('resultsCard').scrollIntoView({behavior:'smooth'});
+  },1500);
+}
+function reviewAnswers(){
+  isReviewMode = true;
+  let playBtn = document.getElementById('playOnlyBtn');
+  let pauseBtn = document.getElementById('pauseBtn');
+  let seekSlider = document.getElementById('seekSlider');
+  if(playBtn) playBtn.style.display = 'none';
+  if(pauseBtn) { pauseBtn.style.display = 'inline-flex'; pauseBtn.onclick = () => { if(audioEl) audioEl.pause(); }; }
+  if(seekSlider) { seekSlider.style.display = 'inline-block'; seekSlider.oninput = () => { if(audioEl) audioEl.currentTime = seekSlider.value; }; }
+  
+  document.querySelectorAll('.option-label').forEach(l=>l.classList.remove('correct-highlight','wrong-highlight'));
+  document.querySelectorAll('.question-block').forEach(block=>{
+    let cv=parseInt(block.dataset.correct);
+    block.querySelectorAll('input[type="radio"]').forEach(radio=>{
+      let lb=radio.parentElement;
+      if(radio.checked){ if(parseInt(radio.value)===cv)lb.classList.add('correct-highlight'); else lb.classList.add('wrong-highlight'); }
+      if(parseInt(radio.value)===cv)lb.classList.add('correct-highlight');
+    });
+  });
+  document.querySelectorAll('.section-container').forEach(s=>s.style.display='block');
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+window.markAnswered=markAnswered;
+window.toggleExplanation=toggleExplanation;
+window.toggleKotoba=toggleKotoba;
+window.switchToSection=switchToSection;
+window.endSection=endSection;
+window.reviewAnswers=reviewAnswers;
+window.goBack=goBack;
+window.playAudio=function(src){ let audio=new Audio(src); audio.play(); };
+</script>
+</body>
+</html>
