@@ -395,24 +395,26 @@
             padding: 12px 0 8px;
         }
         
+        /* ===== GIRL PHOTO - MAX SIZE ===== */
         .birthday-screen .girl-photo {
-            width: 200px;
-            height: 200px;
+            width: 260px;
+            height: 260px;
+            max-width: 90%;
             border-radius: 50%;
             object-fit: cover;
-            border: 4px solid var(--primary);
-            box-shadow: 0 0 60px var(--primary-glow);
-            margin: 0 auto 14px;
+            border: 5px solid var(--primary);
+            box-shadow: 0 0 80px var(--primary-glow), inset 0 0 40px rgba(255,107,107,0.1);
+            margin: 0 auto 16px;
             display: block;
             animation: photoPulse 3s ease-in-out infinite;
             transition: transform 0.3s var(--transition-smooth);
         }
         .birthday-screen .girl-photo:hover {
-            transform: scale(1.03);
+            transform: scale(1.04);
         }
         @keyframes photoPulse {
-            0%, 100% { transform: scale(1); box-shadow: 0 0 60px var(--primary-glow); }
-            50% { transform: scale(1.03); box-shadow: 0 0 80px rgba(255, 107, 107, 0.5); }
+            0%, 100% { transform: scale(1); box-shadow: 0 0 80px var(--primary-glow); }
+            50% { transform: scale(1.03); box-shadow: 0 0 120px rgba(255, 107, 107, 0.5); }
         }
         
         .birthday-screen .girl-photo.error {
@@ -420,8 +422,8 @@
         }
         .birthday-screen .photo-fallback {
             display: none;
-            font-size: 130px;
-            margin: 0 auto 14px;
+            font-size: 150px;
+            margin: 0 auto 16px;
             animation: photoPulse 3s ease-in-out infinite;
         }
 
@@ -909,7 +911,7 @@
             .bear-container { width: 100px; height: 100px; }
             .bear-container .bear-body { font-size: 85px; }
             .welcome-screen h1 { font-size: 1.4rem; }
-            .birthday-screen .girl-photo { width: 160px; height: 160px; }
+            .birthday-screen .girl-photo { width: 200px; height: 200px; }
             .letter-screen .heart-seal { font-size: 80px; }
             .memory-grid { gap: 8px; }
             .viewer-overlay .viewer-nav { width: 40px; height: 40px; font-size: 0.9rem; }
@@ -925,7 +927,7 @@
             .app-container { padding: 14px 12px 18px; }
             .password-grid { gap: 8px; max-width: 200px; }
             .password-grid .num-btn { padding: 12px 0; font-size: 1.2rem; }
-            .birthday-screen .girl-photo { width: 130px; height: 130px; }
+            .birthday-screen .girl-photo { width: 160px; height: 160px; }
             .memory-grid { gap: 6px; }
             .viewer-overlay .viewer-nav { width: 32px; height: 32px; font-size: 0.7rem; }
             .viewer-overlay .viewer-nav.prev { left: -36px; }
@@ -1037,7 +1039,7 @@
         <h2>Happy Birthday <span>My Girl</span></h2>
         <div class="counter-box">
             <div class="count-item">
-                <span class="number" id="yearsCount">19</span>
+                <span class="number" id="yearsCount">0</span>
                 <span class="label">YEARS</span>
             </div>
             <div class="count-item">
@@ -1045,7 +1047,7 @@
                 <span class="label">MONTHS</span>
             </div>
             <div class="count-item">
-                <span class="number" id="daysCount">19</span>
+                <span class="number" id="daysCount">0</span>
                 <span class="label">DAYS</span>
             </div>
         </div>
@@ -1111,6 +1113,7 @@
         const CONFIG = {
             SECRET_PASSWORD: '1901',
             GIRL_PHOTO: 'girl.jpg',
+            BIRTH_DATE: new Date(2003, 7, 17), // 17 August 2003
             MEMORY_IMAGES: [
                 'memory1.jpg',
                 'memory2.jpg',
@@ -1123,7 +1126,6 @@
                 'memory9.jpg',
                 'memory10.jpg',
             ],
-            // Performance settings
             PRELOAD_COUNT: 3,
             LAZY_LOAD_DELAY: 200,
             AUTO_SLIDE_INTERVAL: 4000,
@@ -1163,7 +1165,7 @@
         };
 
         // =====================================================
-        // 3. DOM CACHE (Performance optimization)
+        // 3. DOM CACHE
         // =====================================================
         const DOM = {
             screens: {
@@ -1216,29 +1218,12 @@
             };
         }
 
-        function throttle(fn, limit) {
-            let inThrottle = false;
-            return function(...args) {
-                if (!inThrottle) {
-                    fn.apply(this, args);
-                    inThrottle = true;
-                    setTimeout(() => inThrottle = false, limit);
-                }
-            };
-        }
-
         function clamp(value, min, max) {
             return Math.min(Math.max(value, min), max);
         }
 
         function getImageCount() {
             return CONFIG.MEMORY_IMAGES.length;
-        }
-
-        function getImageUrl(index) {
-            const images = CONFIG.MEMORY_IMAGES;
-            if (index < 0 || index >= images.length) return null;
-            return images[index];
         }
 
         function isValidImageIndex(index) {
@@ -1378,29 +1363,7 @@
         }
 
         // =====================================================
-        // 7. UI HELPERS
-        // =====================================================
-        function setButtonLoading(button, isLoading) {
-            if (isLoading) {
-                button.dataset.originalText = button.textContent;
-                button.textContent = '⏳ Loading...';
-                button.disabled = true;
-            } else {
-                button.textContent = button.dataset.originalText || 'START';
-                button.disabled = false;
-            }
-        }
-
-        function showTemporaryMessage(element, message, duration = 2000) {
-            const original = element.textContent;
-            element.textContent = message;
-            setTimeout(() => {
-                element.textContent = original;
-            }, duration);
-        }
-
-        // =====================================================
-        // 8. MEMORY GRID (with skeleton loading)
+        // 7. MEMORY GRID
         // =====================================================
         function createSkeletonItems(count = 10) {
             let html = '';
@@ -1419,7 +1382,6 @@
 
         function renderMemoryGrid() {
             const images = CONFIG.MEMORY_IMAGES;
-            const maxImages = Math.min(images.length, 10);
             
             if (state.memory.isLoading) {
                 DOM.memoryGrid.innerHTML = createSkeletonItems(10);
@@ -1521,7 +1483,7 @@
         }
 
         // =====================================================
-        // 9. FULLSCREEN VIEWER (with touch & keyboard support)
+        // 8. FULLSCREEN VIEWER
         // =====================================================
         function openViewer(index) {
             const images = CONFIG.MEMORY_IMAGES;
@@ -1591,7 +1553,7 @@
         }
 
         // =====================================================
-        // 10. VIEWER TOUCH GESTURES
+        // 9. VIEWER TOUCH GESTURES
         // =====================================================
         let touchStartX = 0;
         let touchStartY = 0;
@@ -1709,7 +1671,7 @@
         }
 
         // =====================================================
-        // 11. KEYBOARD SHORTCUTS
+        // 10. KEYBOARD SHORTCUTS
         // =====================================================
         document.addEventListener('keydown', function(e) {
             if (!state.viewer.isOpen) return;
@@ -1732,7 +1694,7 @@
         });
 
         // =====================================================
-        // 12. PREMIUM CELEBRATION
+        // 11. PREMIUM CELEBRATION
         // =====================================================
         function triggerCelebration() {
             if (state.celebration.isActive) return;
@@ -1757,7 +1719,7 @@
                 container.appendChild(el);
             }
             
-            // 2. Floating hearts (wave effect)
+            // 2. Floating hearts
             setTimeout(() => {
                 const hearts = ['❤️', '💕', '💖', '💗', '💓'];
                 for (let i = 0; i < 30; i++) {
@@ -1816,7 +1778,7 @@
         }
 
         // =====================================================
-        // 13. LETTER SYSTEM (Enhanced)
+        // 12. LETTER SYSTEM
         // =====================================================
         function handleHeartSealClick() {
             if (state.letter.isUnsealed) {
@@ -1840,7 +1802,7 @@
         }
 
         // =====================================================
-        // 14. EVENT LISTENERS (Optimized)
+        // 13. EVENT LISTENERS
         // =====================================================
         function setupEventListeners() {
             const grid = document.getElementById('passwordGrid');
@@ -1899,7 +1861,7 @@
         }
 
         // =====================================================
-        // 15. AGE CALCULATION
+        // 14. AGE CALCULATION (Birthday: 17 August 2003)
         // =====================================================
         function calculateAge(birthDate) {
             const now = new Date();
@@ -1920,15 +1882,14 @@
         }
 
         function updateAgeCounters() {
-            const birthDate = new Date(2007, 6, 10);
-            const age = calculateAge(birthDate);
+            const age = calculateAge(CONFIG.BIRTH_DATE);
             DOM.counters.years.textContent = age.years;
             DOM.counters.months.textContent = age.months;
             DOM.counters.days.textContent = age.days;
         }
 
         // =====================================================
-        // 16. STARS GENERATION
+        // 15. STARS GENERATION
         // =====================================================
         function createStars() {
             const container = document.getElementById('stars');
@@ -1952,7 +1913,7 @@
         }
 
         // =====================================================
-        // 17. INITIALIZATION
+        // 16. INITIALIZATION
         // =====================================================
         function init() {
             createStars();
@@ -1964,6 +1925,7 @@
             console.log('🌸 Happy Birthday Website Ready!');
             console.log('🔐 Password: ' + CONFIG.SECRET_PASSWORD);
             console.log('📸 Memory Images: ' + CONFIG.MEMORY_IMAGES.length + ' images');
+            console.log('🎂 Birthday: 17 August 2003');
         }
 
         if (document.readyState === 'loading') {
